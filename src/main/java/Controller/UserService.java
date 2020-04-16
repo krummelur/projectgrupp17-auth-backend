@@ -4,12 +4,10 @@ import com.fredriksonsound.iot_backoffice_auth.Data.AgencyRepository;
 import com.fredriksonsound.iot_backoffice_auth.Data.UserRepository;
 import com.fredriksonsound.iot_backoffice_auth.ERROR_CODE;
 import com.fredriksonsound.iot_backoffice_auth.endpoint.RegisterController;
-import com.fredriksonsound.iot_backoffice_auth.model.Users;
+import com.fredriksonsound.iot_backoffice_auth.model.User;
 import com.fredriksonsound.iot_backoffice_auth.model.ValidationError;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 public class UserService {
@@ -32,7 +30,7 @@ public class UserService {
         if(agencyRepository.findById(credentials.agency()).isEmpty()) {
             throw new ValidationError(ERROR_CODE.NONEXISTENT_AGENCY);
         }
-        Users u = new Users(credentials.username(), credentials.email(), PasswordUtils.Hash(credentials.password()), credentials.agency());
+        User u = new User(credentials.username(), credentials.email(), PasswordUtils.Hash(credentials.password()), credentials.agency());
         userRepository.save(u);
     }
 }

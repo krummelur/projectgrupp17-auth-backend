@@ -19,10 +19,12 @@ public class AuthController {
     private AuthService authService;
 
     @RequestMapping(value = "/auth/login", method = RequestMethod.POST)
-    public ResponseEntity<JsonObject> loginWithCredentials(@RequestBody AuthCredentials credentials) {
-        try { credentials.validate(); } catch (ValidationError v) {
-            return ErrorResponse.JsonFromMessage("invalid credentials").collect();
-        }
+    public ResponseEntity<JsonObject> loginWithCredentials(@RequestBody(required = false) AuthCredentials credentials) {
+        var genericError = ErrorResponse.JsonFromMessage("invalid credentials");
+        try { credentials.validate(); }
+        catch (ValidationError | NullPointerException v)
+            { return genericError.collect(); }
+
         if(authService.validateUserPassword(credentials.email, credentials.password)) {
             var tokenPair = authService.generateAndSaveTokens(credentials.email);
             JsonObject data = new JsonObject();

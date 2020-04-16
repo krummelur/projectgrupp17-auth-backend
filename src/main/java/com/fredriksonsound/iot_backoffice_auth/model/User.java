@@ -3,15 +3,17 @@ import com.fredriksonsound.iot_backoffice_auth.endpoint.RegisterController;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Entity
-public class Users {
+@Table(name = "users")
+public class User {
     @Id private String email;
     private String username, pass_hash, agency;
 
-    public Users() {};
+    public User() {};
 
-    public Users(String username, String email, String pass_hash, String agency) {
+    public User(String username, String email, String pass_hash, String agency) {
         this.username = username;
         this.email = email;
         this.pass_hash = pass_hash;

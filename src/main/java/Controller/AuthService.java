@@ -3,7 +3,7 @@ package Controller;
 import com.fredriksonsound.iot_backoffice_auth.Data.TokenRepository;
 import com.fredriksonsound.iot_backoffice_auth.Data.UserRepository;
 import com.fredriksonsound.iot_backoffice_auth.model.Token;
-import com.fredriksonsound.iot_backoffice_auth.model.Users;
+import com.fredriksonsound.iot_backoffice_auth.model.User;
 import com.fredriksonsound.iot_backoffice_auth.util.Pair;
 import de.rtner.security.auth.spi.SimplePBKDF2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,7 @@ public class AuthService {
     private TokenRepository tokenRepository;
 
     public boolean validateUserPassword(String email, String password) {
-        Users user;
+        User user;
         try {
             user = userRepository.findById(email).get();
         } catch (NoSuchElementException e) {
