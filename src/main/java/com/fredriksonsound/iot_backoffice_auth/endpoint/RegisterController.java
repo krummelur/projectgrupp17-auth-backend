@@ -21,7 +21,6 @@ public class RegisterController {
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public ResponseEntity<JsonObject> registerUser(@RequestBody RegisterCredentials credentials) {
 
-
         try { credentials.validate(); } catch (ValidationError v) {
             return ErrorResponse.JsonFromMessage("Invalid json, missing key(s)").collect();
         }
@@ -49,7 +48,7 @@ public class RegisterController {
     }
 
 
-    public class RegisterCredentials implements ValidationError.Validatable {
+    public static class RegisterCredentials implements ValidationError.Validatable {
         private String username, password, email, agency;
         public String username() {
             return username;

@@ -18,15 +18,10 @@ public class UserService {
     @Autowired
     private AgencyRepository agencyRepository;
 
-    public Optional<Users> getByUsername(String un) {
-        return userRepository.findById(un);
-    }
-
     public void saveNewUser(RegisterController.RegisterCredentials credentials) throws ValidationError {
         //TODO: Check for both email and username, email should be primary.
-        if (!getByUsername(credentials.username()).isEmpty()) {
+        if (userRepository.existsById(credentials.username()))
             throw new ValidationError(ERROR_CODE.CONFLICTING_USER);
-        }
 
         if(!UserUtils.validPassword(credentials.password()))
             throw new ValidationError(ERROR_CODE.INVALID_PASSWORD);
@@ -37,6 +32,7 @@ public class UserService {
         if(agencyRepository.findById(credentials.agency()).isEmpty()) {
             throw new ValidationError(ERROR_CODE.NONEXISTENT_AGENCY);
         }
-        userRepository.save(new Users(credentials.username(), credentials.email(), PasswordUtils.Hash(credentials.password()), credentials.agency()));
+        Users u = new Users(credentials.username(), credentials.email(), PasswordUtils.Hash(credentials.password()), credentials.agency());
+        userRepository.save(u);
     }
 }
