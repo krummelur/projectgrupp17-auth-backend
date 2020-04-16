@@ -30,10 +30,10 @@ public class AuthController {
         try { credentials.validate(); } catch (ValidationError v) {
             return ErrorResponse_json("invalid credentials").collect();
         }
-        
+
         var gson = new JsonObject();
         gson.addProperty("Result", "OKAYYY");
-        return new ResponseEntity<JsonObject>(gson, new HttpHeaders(), HttpStatus.OK);
+        return new ResponseEntity<>(gson, new HttpHeaders(), HttpStatus.OK);
     }
 }
 
