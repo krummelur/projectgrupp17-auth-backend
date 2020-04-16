@@ -1,14 +1,14 @@
-package com.fredriksonsound.iot_backoffice_auth;
+package com.fredriksonsound.iot_backoffice_auth.web;
 
 import com.google.gson.JsonObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-public class ErrorResponse<T> implements Response {
+public class ErrorResponse<T> implements Response<T> {
     private final T body;
     private final HttpStatus status;
 
-    public static ErrorResponse<JsonObject> ErrorResponse_json(String message) {
+    public static ErrorResponse<JsonObject> JsonFromMessage(String message) {
         var json = new JsonObject();
         json.addProperty("status", "error");
         json.addProperty("message", message);
