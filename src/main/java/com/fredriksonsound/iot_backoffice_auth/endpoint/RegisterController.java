@@ -1,8 +1,6 @@
 package com.fredriksonsound.iot_backoffice_auth.endpoint;
 
-//import com.fredriksonsound.iot_backoffice_auth.Data.UserRepository;
-//import com.fredriksonsound.iot_backoffice_auth.model.User;
-import com.fredriksonsound.iot_backoffice_auth.Data.UserRepository;
+import Controller.UserService;
 import com.fredriksonsound.iot_backoffice_auth.model.ValidationError;
 import com.fredriksonsound.iot_backoffice_auth.web.ErrorResponse;
 import com.google.gson.JsonObject;
@@ -18,27 +16,41 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class RegisterController {
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public ResponseEntity<JsonObject> registerUser(@RequestBody RegisterCredentials credentials) {
+
+
         try { credentials.validate(); } catch (ValidationError v) {
             return ErrorResponse.JsonFromMessage("Invalid json, missing key(s)").collect();
         }
-        //User user = null;
 
-        //try { user = userRepository.findById("test").get();}
-        //catch (NoSuchElementException e) {e.printStackTrace();}
+        try { userService.saveNewUser(credentials); } catch (ValidationError e) {
+            switch (e.errorCode) {
+                case INVALID_EMAIL:
+                    return ErrorResponse.JsonFromMessage("invalid email").collect();
+                case INVALID_PASSWORD:
+                    return ErrorResponse.JsonFromMessage("invalid password").collect();
+                case INVALID_USERNAME:
+                    return ErrorResponse.JsonFromMessage("invalid username").collect();
+                case CONFLICTING_USER:
+                    return ErrorResponse.JsonFromMessage("user or email aready taken").collect();
+                case NONEXISTENT_AGENCY:
+                    return ErrorResponse.JsonFromMessage("agency does not exist").collect();
+                default:
+                    throw new RuntimeException("Unmapped error code encountered");
+            }
+        }
 
-        //System.out.println(user);
         var gson = new JsonObject();
-        gson.addProperty("Result", "OKAYYY");
-        return new ResponseEntity<>(gson, new HttpHeaders(), HttpStatus.OK);
+        gson.addProperty("status", "ok");
+        return new ResponseEntity<>(gson, new HttpHeaders(), HttpStatus.CREATED);
     }
 
 
     public class RegisterCredentials implements ValidationError.Validatable {
-        private String username, password, email;
+        private String username, password, email, agency;
         public String username() {
             return username;
         }
@@ -49,9 +61,13 @@ public class RegisterController {
             return email;
         }
 
+        public String agency() {
+            return agency;
+        }
+
         @Override
         public boolean validate() throws ValidationError {
-            if (email != null && password != null && username != null)
+            if (email != null && password != null && username != null && agency != null)
                 return true;
             throw new ValidationError("not a valid user");
         }

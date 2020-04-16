@@ -16,7 +16,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 public class AuthController {
 
     @RequestMapping(value = "/auth/login", method = RequestMethod.POST)
-    public ResponseEntity<JsonObject> loginWithCredentials(@RequestBody AuthCredentials credentials, UriComponentsBuilder ucBuilder) {
+    public ResponseEntity<JsonObject> loginWithCredentials(@RequestBody AuthCredentials credentials) {
         try { credentials.validate(); } catch (ValidationError v) {
             return ErrorResponse.JsonFromMessage("invalid credentials").collect();
         }
