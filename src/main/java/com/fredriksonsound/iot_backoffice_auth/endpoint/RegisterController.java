@@ -18,7 +18,7 @@ public class RegisterController {
     @Autowired
     private UserService userService;
 
-    @RequestMapping(value = "/register", method = RequestMethod.POST)
+    @RequestMapping(value = "/users", method = RequestMethod.POST)
     public ResponseEntity<JsonObject> registerUser(@RequestBody RegisterCredentials credentials) {
 
         try { credentials.validate(); } catch (ValidationError v) {
@@ -50,6 +50,16 @@ public class RegisterController {
 
     public static class RegisterCredentials implements ValidationError.Validatable {
         private String username, password, email, agency;
+
+        public RegisterCredentials(){};
+
+        public RegisterCredentials(String username, String password, String email, String agency) {
+            this.username = username;
+            this.password = password;
+            this.email = email;
+            this.agency = agency;
+        }
+
         public String username() {
             return username;
         }
@@ -63,6 +73,7 @@ public class RegisterController {
         public String agency() {
             return agency;
         }
+
 
         @Override
         public boolean validate() throws ValidationError {
