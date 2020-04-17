@@ -104,9 +104,4 @@ public class UserServiceTest {
         ValidationError e = assertThrows(ValidationError.class, () -> { userService.saveNewUser(rc); }, "validationException thrown when adding existing user" );
         assertThat(e.errorCode).isEqualTo(ERROR_CODE.NONEXISTENT_AGENCY);
     }
-
-    @Test
-    public void failing_test() {
-        assertThat(true).isEqualTo(false);
-    }
 }
