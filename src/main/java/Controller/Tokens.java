@@ -70,13 +70,4 @@ public class Tokens {
         //Builds the JWT and serializes it to a compact, URL-safe string
         return builder.compact();
     }
-
-    public static Claims decodeJWT(String jwt) {
-        //jwt = "eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJiOGMwYmYwOS1jMTllLTQwYmUtOTBiMC1mNWMyZGMyM2EwMjkiLCJpYXQiOjE1ODcxMzExMzQsInN1YiI6ImFhYUBhYWEuY29tIiwiaXNzIjoicHJvamVrdGdydXBwMTciLCJleHAiOjE1ODcxMzExNjR9.nljcjUVsNWQ4XcNVP8FMhwtxI71JzHd7WU7LkGZTpNY";
-        //This line will throw an exception if it is not a signed JWS (as expected)
-        Claims claims = Jwts.parser()
-                .setSigningKey(API_SECRET_KEY.getBytes())
-                .parseClaimsJws(jwt).getBody();
-        return claims;
-    }
 }
