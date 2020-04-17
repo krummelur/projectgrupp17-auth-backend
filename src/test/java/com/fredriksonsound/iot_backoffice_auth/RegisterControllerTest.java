@@ -95,7 +95,7 @@ public class RegisterControllerTest {
     }
 
     @Test
-    public void it_throws_correct_error_when_invalid_email() throws Exception {
+    public void it_gives_correct_error_when_invalid_email() throws Exception {
         when(uService.saveNewUser(Mockito.any(RegisterCredentials.class))).thenAnswer((invocation) -> {
             var u = (RegisterCredentials) invocation.getArgument(0);
             return mockedSaveUser(u);
@@ -106,7 +106,7 @@ public class RegisterControllerTest {
     }
 
     @Test
-    public void it_throws_correct_error_when_invalid_username() throws Exception {
+    public void it_gives_correct_error_when_invalid_username() throws Exception {
         when(uService.saveNewUser(Mockito.any(RegisterCredentials.class))).thenAnswer((invocation) -> {
             var u = (RegisterCredentials) invocation.getArgument(0);
             return mockedSaveUser(u);
@@ -117,7 +117,7 @@ public class RegisterControllerTest {
     }
 
     @Test
-    public void it_throws_correct_error_when_conflicting_iuser() throws Exception {
+    public void it_gives_correct_error_when_conflicting_iuser() throws Exception {
         when(uService.saveNewUser(Mockito.any(RegisterCredentials.class))).thenAnswer((invocation) -> {
             var u = (RegisterCredentials) invocation.getArgument(0);
             return mockedSaveUser(u);
@@ -128,7 +128,7 @@ public class RegisterControllerTest {
     }
 
     @Test
-    public void it_throws_correct_error_when_nonexistent_agency() throws Exception {
+    public void it_gives_correct_error_when_nonexistent_agency() throws Exception {
         when(uService.saveNewUser(Mockito.any(RegisterCredentials.class))).thenAnswer((invocation) -> {
             var u = (RegisterCredentials) invocation.getArgument(0);
             return mockedSaveUser(u);
@@ -139,7 +139,7 @@ public class RegisterControllerTest {
     }
 
     @Test
-    public void it_throws_correct_error_when_missing_keys() throws Exception {
+    public void it_gives_correct_error_when_missing_keys() throws Exception {
         when(uService.saveNewUser(Mockito.any(RegisterCredentials.class))).thenAnswer((invocation) -> {
             var u = (RegisterCredentials) invocation.getArgument(0);
             return mockedSaveUser(u);
