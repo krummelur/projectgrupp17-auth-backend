@@ -1,10 +1,15 @@
 package com.fredriksonsound.iot_backoffice_auth.util;
 
-public class Pair<X, Y> {
-    public final X first;
-    public final Y second;
+/**
+ * Pair....
+ * @param <K>
+ * @param <V>
+ */
+public class Pair<K, V> {
+    public final K first;
+    public final V second;
 
-    public Pair(X f, Y s) {
+    public Pair(K f, V s) {
         this.first = f;
         this.second = s;
     }

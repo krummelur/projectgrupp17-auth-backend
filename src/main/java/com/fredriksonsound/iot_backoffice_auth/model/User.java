@@ -5,6 +5,9 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+/**
+ * Database translation specification for users table
+ */
 @Entity
 @Table(name = "users")
 public class User {

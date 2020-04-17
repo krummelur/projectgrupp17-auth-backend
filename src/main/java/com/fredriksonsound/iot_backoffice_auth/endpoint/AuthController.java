@@ -8,18 +8,48 @@ import com.fredriksonsound.iot_backoffice_auth.web.OkResponse;
 import com.fredriksonsound.iot_backoffice_auth.web.UnauthorizedResponse;
 import com.google.gson.JsonObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.sql.Ref;
 
 @RestController
 public class AuthController {
     @Autowired
     private AuthService authService;
 
-    @RequestMapping(value = "/auth/login", method = RequestMethod.POST)
+    /**
+     * Refreshes an access token using specified refresh token
+     * @param refresh the refresh token id
+     * @param access the JWT access token
+     * @return httpResponse
+     */
+    @RequestMapping(value = "/auth/refresh", method = RequestMethod.POST)
+    public ResponseEntity<JsonObject> refreshAccessToken(@RequestHeader(value = "Refresh-Token", required = false) String refresh,
+                                                         @RequestHeader(value = "Auth-Token", required = false) String access)  {
+        String newToken = null;
+        try { newToken = authService.refresh(access, refresh); } catch (ValidationError v) {
+            switch (v.errorCode) {
+                case NONEXISTENT_REFRESH_TOKEN:
+                    return UnauthorizedResponse.JsonFromMessage("no such refresh token").collect();
+                case INVALID_JWT:
+                    return UnauthorizedResponse.JsonFromMessage("invalid jwt").collect();
+                case NONEXPIRED_ACCESS_TOKEN:
+                    return UnauthorizedResponse.JsonFromMessage("auth token was not expired").collect();
+                case EXPIRED_REFRESH_TOKEN:
+                    return UnauthorizedResponse.JsonFromMessage("refresh token was already expired").collect();
+            }
+        }
+        var response = new JsonObject();
+        response.addProperty("status", "success");
+        response.addProperty("token", newToken);
+        return new CreatedResponse<>(response).collect();
+    }
+
+    /**
+     * Logs a user using email and password
+     * @param credentials
+     * @return an access token and refresh token id on success, error on fail.
+     */
+        @RequestMapping(value = "/auth/login", method = RequestMethod.POST)
     public ResponseEntity<JsonObject> loginWithCredentials(@RequestBody(required = false) AuthCredentials credentials) {
         var genericError = ErrorResponse.JsonFromMessage("missing credentials");
         try { credentials.validate(); }
@@ -36,13 +66,17 @@ public class AuthController {
         return UnauthorizedResponse.JsonFromMessage("invalid login").collect();
     }
 
+    /**
+     * logs a specified user out, deletes the corresponding refresh token
+     * @param refresh
+     * @return OK or Bad request
+     */
     @RequestMapping(value = "/auth/logout", method = RequestMethod.POST)
     public ResponseEntity<JsonObject> logoutToken(@RequestHeader(value = "Refresh-Token", required = false) String refresh) {
         if(refresh != null && authService.deleteRefreshToken(refresh))
             return OkResponse.JsonFromMessage("deleted").collect();
         return ErrorResponse.JsonFromMessage("no such token").collect();
     }
-
 
     public static class AuthCredentials implements ValidationError.Validatable {
         String password, email;

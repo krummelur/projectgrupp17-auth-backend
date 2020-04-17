@@ -2,18 +2,12 @@ package com.fredriksonsound.iot_backoffice_auth;
 
 
 import Controller.AuthService;
-import Controller.UserService;
-import com.fredriksonsound.iot_backoffice_auth.Data.UserRepository;
 import com.fredriksonsound.iot_backoffice_auth.endpoint.AuthController;
-import com.fredriksonsound.iot_backoffice_auth.endpoint.RegisterController;
-import com.fredriksonsound.iot_backoffice_auth.model.User;
 import com.fredriksonsound.iot_backoffice_auth.model.ValidationError;
 import com.fredriksonsound.iot_backoffice_auth.util.Pair;
 import com.google.gson.JsonObject;
 import org.junit.Before;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -21,16 +15,17 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.Optional;
 
 import static org.hamcrest.core.StringContains.containsString;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
 
+/**
+ * Tests the Auth endpoint
+ */
 @SpringBootTest
 @AutoConfigureMockMvc
 public class AuthControllerTest {
@@ -39,6 +34,13 @@ public class AuthControllerTest {
 
     @MockBean
     AuthService authService;
+
+    private String expiredAuthToken = "EXPIRED_AUTH_TKN";
+    private String invalidAuthToken = "INVALID_AUTH_TKN";
+    private String nonExpiredAuthToken = "NON_EXPIRED_AUTH_TKN";
+    private String nonExpiredRefreshToken = "NON_EXPIRED_REFRESH_TKN";
+    private String expiredRefreshToken = "EXPIRED_REFRESH_TKN";
+    private String nonexistentRefreshToken = "NONEXISTENT_REFRESH_TKN";
 
     private AuthController.AuthCredentials successLogin =
             new AuthController.AuthCredentials("email@success.com", "password1");
@@ -50,14 +52,6 @@ public class AuthControllerTest {
         obj.addProperty("email", a.email());
         obj.addProperty("password", a.password());
         return obj.toString();
-    }
-
-    private boolean mockedLogin(RegisterController.RegisterCredentials u) {
-        if(u.email().equals("email@invalid.com"))
-            return false;
-        if(u.email().equals("email@success.com"))
-            return false;
-        throw new RuntimeException();
     }
 
     @Before
@@ -106,5 +100,48 @@ public class AuthControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string(containsString("\"status\":\"error\"")))
                 .andExpect(content().string(containsString("\"message\":\"missing credentials\"")));
+    }
+
+    @Test
+    public void refresh_nonexistent_refreshtoken() throws Exception {
+        when(authService.refresh(expiredAuthToken, nonexistentRefreshToken)).thenThrow(new ValidationError(ERROR_CODE.NONEXISTENT_REFRESH_TOKEN));
+        this.mockMvc.perform(post("/auth/refresh").contentType(MediaType.APPLICATION_JSON)
+                .header("Auth-Token", expiredAuthToken)
+                .header("Refresh-Token", nonexistentRefreshToken))
+                .andExpect(status().isUnauthorized())
+                .andExpect(content().string(containsString("\"status\":\"error\"")))
+                .andExpect(content().string(containsString("\"message\":\"no such refresh token\"")));
+    }
+
+    @Test
+    public void refresh_nonexpired_authtoken() throws Exception {
+        when(authService.refresh(nonExpiredAuthToken, nonExpiredRefreshToken)).thenThrow(new ValidationError(ERROR_CODE.NONEXPIRED_ACCESS_TOKEN));
+        this.mockMvc.perform(post("/auth/refresh").contentType(MediaType.APPLICATION_JSON)
+                .header("Auth-Token", nonExpiredAuthToken)
+                .header("Refresh-Token", nonExpiredRefreshToken))
+                .andExpect(status().isUnauthorized())
+                .andExpect(content().string(containsString("\"status\":\"error\"")))
+                .andExpect(content().string(containsString("\"message\":\"auth token was not expired\"")));
+    }
+
+    @Test
+    public void refresh_expired_refreshToken() throws Exception {
+        when(authService.refresh(expiredAuthToken, expiredRefreshToken)).thenThrow(new ValidationError(ERROR_CODE.EXPIRED_REFRESH_TOKEN));
+        this.mockMvc.perform(post("/auth/refresh").contentType(MediaType.APPLICATION_JSON)
+                .header("Auth-Token", expiredAuthToken)
+                .header("Refresh-Token", expiredRefreshToken))
+                .andExpect(status().isUnauthorized())
+                .andExpect(content().string(containsString("\"status\":\"error\"")))
+                .andExpect(content().string(containsString("\"message\":\"refresh token was already expired\"")));
+    }
+    @Test
+    public void invalid_accessToken() throws Exception {
+        when(authService.refresh(invalidAuthToken, nonExpiredRefreshToken)).thenThrow(new ValidationError(ERROR_CODE.INVALID_JWT));
+        this.mockMvc.perform(post("/auth/refresh").contentType(MediaType.APPLICATION_JSON)
+                .header("Auth-Token", invalidAuthToken)
+                .header("Refresh-Token", nonExpiredRefreshToken))
+                .andExpect(status().isUnauthorized())
+                .andExpect(content().string(containsString("\"status\":\"error\"")))
+                .andExpect(content().string(containsString("\"message\":\"invalid jwt\"")));
     }
 }

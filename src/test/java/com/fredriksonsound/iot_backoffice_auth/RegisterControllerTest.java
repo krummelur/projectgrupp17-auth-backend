@@ -15,8 +15,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import com.fredriksonsound.iot_backoffice_auth.endpoint.RegisterController.RegisterCredentials;
 
-import java.util.Optional;
-
 import static org.hamcrest.core.StringContains.containsString;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -26,8 +24,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
 
-
-
+/**
+ * Tests the Register endpoint
+ */
 @SpringBootTest
 @AutoConfigureMockMvc
 public class RegisterControllerTest {
