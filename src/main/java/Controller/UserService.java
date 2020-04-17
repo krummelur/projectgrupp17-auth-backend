@@ -16,7 +16,7 @@ public class UserService implements IUserService {
     @Autowired
     private AgencyRepository agencyRepository;
 
-    public void saveNewUser(RegisterController.RegisterCredentials credentials) throws ValidationError {
+    public boolean saveNewUser(RegisterController.RegisterCredentials credentials) throws ValidationError {
         //TODO: Check for both email and username, email should be primary.
         if (userRepository.existsById(credentials.email()))
             throw new ValidationError(ERROR_CODE.CONFLICTING_USER);
@@ -32,5 +32,6 @@ public class UserService implements IUserService {
         }
         User u = new User(credentials.username(), credentials.email(), PasswordUtils.Hash(credentials.password()), credentials.agency());
         userRepository.save(u);
+        return true;
     }
 }

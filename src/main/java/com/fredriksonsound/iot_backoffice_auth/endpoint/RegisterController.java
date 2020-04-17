@@ -22,7 +22,7 @@ public class RegisterController {
     public ResponseEntity<JsonObject> registerUser(@RequestBody RegisterCredentials credentials) {
 
         try { credentials.validate(); } catch (ValidationError v) {
-            return ErrorResponse.JsonFromMessage("Invalid json, missing key(s)").collect();
+            return ErrorResponse.JsonFromMessage("Invalid body, missing key(s)").collect();
         }
 
         try { userService.saveNewUser(credentials); } catch (ValidationError e) {
