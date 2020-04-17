@@ -2,6 +2,8 @@
 auth service for iot project using JWT
 implemented with spring testing with mockito
 
+![Java CI with Gradle](https://github.com/krummelur/projectgrupp17-auth-backend/workflows/Java%20CI%20with%20Gradle/badge.svg?branch=master)
+
 
 ## endpoints
 
