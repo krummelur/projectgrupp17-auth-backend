@@ -4,6 +4,11 @@ import com.google.gson.JsonObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+
+/**
+ * More ergonomic response
+ * @param <T> response body type
+ */
 public class OkResponse<T> implements Response<T> {
     final T body;
 

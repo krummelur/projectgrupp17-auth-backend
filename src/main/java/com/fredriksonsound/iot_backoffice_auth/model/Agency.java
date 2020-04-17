@@ -3,6 +3,9 @@ package com.fredriksonsound.iot_backoffice_auth.model;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
+/**
+ * Database translation specification for agency table
+ */
 @Entity
 public class Agency {
     @Id

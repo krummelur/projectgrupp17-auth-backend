@@ -8,10 +8,15 @@ import com.google.gson.JsonObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+
 @RestController
 public class Default {
+    /**
+     * Default endpoint
+     * @return API version
+     */
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public ResponseEntity<String> index() {
-        return new OkResponse<String>("auth server v0.0.1").collect();
+        return new OkResponse<String>("auth server v0.5.0").collect();
     }
 }

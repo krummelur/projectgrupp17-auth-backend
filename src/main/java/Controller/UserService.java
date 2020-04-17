@@ -16,6 +16,12 @@ public class UserService implements IUserService {
     @Autowired
     private AgencyRepository agencyRepository;
 
+    /**
+     * Saves a new user to the database
+     * @param credentials the user
+     * @return true if success
+     * @throws ValidationError
+     */
     public boolean saveNewUser(RegisterController.RegisterCredentials credentials) throws ValidationError {
         //TODO: Check for both email and username, email should be primary.
         if (userRepository.existsById(credentials.email()))
@@ -30,6 +36,7 @@ public class UserService implements IUserService {
         if(!agencyRepository.existsById(credentials.agency())) {
             throw new ValidationError(ERROR_CODE.NONEXISTENT_AGENCY);
         }
+
         User u = new User(credentials.username(), credentials.email(), PasswordUtils.Hash(credentials.password()), credentials.agency());
         userRepository.save(u);
         return true;

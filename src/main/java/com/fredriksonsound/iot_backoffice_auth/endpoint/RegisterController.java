@@ -18,6 +18,11 @@ public class RegisterController {
     @Autowired
     private UserService userService;
 
+    /**
+     * Creates a new user given user details
+     * @param credentials the user to create
+     * @return Created on success, error on invalid user
+     */
     @RequestMapping(value = "/users", method = RequestMethod.POST)
     public ResponseEntity<JsonObject> registerUser(@RequestBody RegisterCredentials credentials) {
 
@@ -42,11 +47,10 @@ public class RegisterController {
             }
         }
 
-        var gson = new JsonObject();
-        gson.addProperty("status", "ok");
-        return new ResponseEntity<>(gson, new HttpHeaders(), HttpStatus.CREATED);
+        var json = new JsonObject();
+        json.addProperty("status", "ok");
+        return new ResponseEntity<>(json, new HttpHeaders(), HttpStatus.CREATED);
     }
-
 
     public static class RegisterCredentials implements ValidationError.Validatable {
         private String username, password, email, agency;
@@ -73,7 +77,6 @@ public class RegisterController {
         public String agency() {
             return agency;
         }
-
 
         @Override
         public boolean validate() throws ValidationError {

@@ -8,24 +8,24 @@ import org.springframework.http.ResponseEntity;
  * More ergonomic response
  * @param <T> response body type
  */
-public class ErrorResponse<T> implements Response<T> {
+public class UnauthorizedResponse<T> implements Response<T> {
     private final T body;
     private final HttpStatus status;
 
-    public static ErrorResponse<JsonObject> JsonFromMessage(String message) {
+    public static UnauthorizedResponse<JsonObject> JsonFromMessage(String message) {
         var json = new JsonObject();
         json.addProperty("status", "error");
         json.addProperty("message", message);
-        return new ErrorResponse<JsonObject>(json);
+        return new UnauthorizedResponse<>(json);
     }
 
-    public ErrorResponse(T body, HttpStatus status) {
+    public UnauthorizedResponse(T body, HttpStatus status) {
         this.body = body;
         this.status = status;
     }
 
-    public ErrorResponse(T body) {
-        this(body, HttpStatus.BAD_REQUEST);
+    public UnauthorizedResponse(T body) {
+        this(body, HttpStatus.UNAUTHORIZED);
     }
 
     @Override

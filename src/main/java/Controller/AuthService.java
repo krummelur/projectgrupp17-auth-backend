@@ -2,10 +2,14 @@ package Controller;
 
 import com.fredriksonsound.iot_backoffice_auth.Data.TokenRepository;
 import com.fredriksonsound.iot_backoffice_auth.Data.UserRepository;
-import com.fredriksonsound.iot_backoffice_auth.model.Token;
+import com.fredriksonsound.iot_backoffice_auth.ERROR_CODE;
+import com.fredriksonsound.iot_backoffice_auth.model.RefreshToken;
 import com.fredriksonsound.iot_backoffice_auth.model.User;
+import com.fredriksonsound.iot_backoffice_auth.model.ValidationError;
 import com.fredriksonsound.iot_backoffice_auth.util.Pair;
-import de.rtner.security.auth.spi.SimplePBKDF2;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.SignatureException;
+import io.jsonwebtoken.impl.DefaultClaims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,12 +18,19 @@ import java.util.UUID;
 
 
 @Service
-public class AuthService {
+public class AuthService implements IAuthService {
     @Autowired
     private UserRepository userRepository;
     @Autowired
     private TokenRepository tokenRepository;
 
+    /**
+     * Checks that a given password matches a given user email
+     * @param email
+     * @param password
+     * @return true if match, false if not match
+     */
+    @Override
     public boolean validateUserPassword(String email, String password) {
         User user;
         try {
@@ -27,29 +38,67 @@ public class AuthService {
         } catch (NoSuchElementException e) {
             return false;
         }
-        var h = PasswordUtils.Hash("test");
-        var k = PasswordUtils.verify("test", h);
-        // Salt 8 bytes SHA1PRNG, HmacSHA1, 1000 iterations, ISO-8859-1
-        String s = new SimplePBKDF2().deriveKeyFormatted("password");
-// s === "CCD16F76AF3DE30A:1000:B53849A7E20883C77618D3AD16269F98BC4DCA19"
-        boolean ok = new SimplePBKDF2().verifyKeyFormatted(s, "password");
-        
         return PasswordUtils.verify(password, user.pass_hash());
     }
 
+    /**
+     * Generates a new access token and rtefresh token.
+     * @param email
+     * @return and access token and a refresh token id.
+     */
+    @Override
     public Pair<String, String> generateAndSaveTokens(String email) {
         var tokenId = UUID.randomUUID().toString();
         var refreshTokenId = UUID.randomUUID().toString();
         Pair<String, String> tokens = new Pair (Tokens.getAccessToken(tokenId, email), Tokens.retRefreshToken(refreshTokenId, email));
-        Token refreshToken = new Token(refreshTokenId, tokens.second);
+        RefreshToken refreshToken = new RefreshToken(refreshTokenId, tokens.second);
         tokenRepository.save(refreshToken);
-        return new Pair(tokens.second, refreshTokenId);
+        return new Pair(tokens.first, refreshTokenId);
     }
 
+    /**
+     * Deletes a specified access token by id
+      * @param id
+     * @return true if the deletion was a success
+     */
+    @Override
     public boolean deleteRefreshToken(String id) {
             if(!tokenRepository.existsById(id))
             return false;
         tokenRepository.deleteById(id);
         return true;
+    }
+
+    /**
+     * Generates a new access token given an expired accesstoken and a ferfresh token id
+     * @param access
+     * @param refreshId
+     * @return a new access token
+     * @throws ValidationError
+     */
+    @Override
+    public String refresh(String access, String refreshId) throws ValidationError {
+        System.out.println("REFRESHID: " + refreshId);
+        if(!tokenRepository.existsById(refreshId))
+            throw new ValidationError(ERROR_CODE.NONEXISTENT_REFRESH_TOKEN);
+        DefaultClaims parsed = null;
+        try { parsed = (DefaultClaims) Tokens.decodeJwToken(access).getBody();}
+        catch (MalformedJwtException | SignatureException | IllegalArgumentException e) {
+        e.printStackTrace();  throw new ValidationError(ERROR_CODE.INVALID_JWT);
+        }
+
+        if((Integer)parsed.get("exp") > System.currentTimeMillis()/1000)
+            throw new ValidationError(ERROR_CODE.NONEXPIRED_ACCESS_TOKEN);
+
+        RefreshToken refreshTokenInstance = tokenRepository.findById(refreshId).orElseThrow();
+        DefaultClaims parsedRefresh = (DefaultClaims) Tokens.decodeJwToken(refreshTokenInstance.refresh_token()).getBody();
+
+        if((Integer)parsedRefresh.get("exp") < System.currentTimeMillis()/1000) {
+            tokenRepository.deleteById(parsedRefresh.get("jti").toString());
+            throw new ValidationError(ERROR_CODE.EXPIRED_REFRESH_TOKEN);
+        }
+
+        String newAccessToken = Tokens.getAccessToken(UUID.randomUUID().toString(), (String)parsed.get("sub"));
+        return newAccessToken;
     }
 }
