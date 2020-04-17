@@ -21,6 +21,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 /**
@@ -62,7 +63,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void it_should_give_error_on_conflicting_user() {
+    public void it_throws_correct_error_on_on_conflicting_user() {
         RegisterController.RegisterCredentials rc =
                 new RegisterController.RegisterCredentials("magnus", "abC123", "test@example.com", "123");
 
@@ -71,7 +72,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void it_should_give_error_on_invalid_email() {
+    public void it_throws_correct_error_on_on_invalid_email() {
         RegisterController.RegisterCredentials rc =
                 new RegisterController.RegisterCredentials("unique", "abC123", "test@e@xample.com", "123");
         ValidationError e = assertThrows(ValidationError.class, () -> { userService.saveNewUser(rc); }, "validationException thrown when adding existing user" );
@@ -87,7 +88,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void it_should_give_error_on_insecure_password() {
+    public void it_throws_correct_error_on_insecure_password() {
         RegisterController.RegisterCredentials rc =
                 new RegisterController.RegisterCredentials("unique", "abc123", "unique@example.com", "123");
 
@@ -96,11 +97,16 @@ public class UserServiceTest {
     }
 
     @Test
-    public void it_should_give_error_on_nonexistent_agency() {
+    public void it_throws_correct_error_on_nonexistent_agency() {
         RegisterController.RegisterCredentials rc =
                 new RegisterController.RegisterCredentials("unique", "abC123", "unique@example.com", "1234");
 
         ValidationError e = assertThrows(ValidationError.class, () -> { userService.saveNewUser(rc); }, "validationException thrown when adding existing user" );
         assertThat(e.errorCode).isEqualTo(ERROR_CODE.NONEXISTENT_AGENCY);
+    }
+
+    @Test
+    public void failing_test() {
+        assertThat(true).isEqualTo(false);
     }
 }
