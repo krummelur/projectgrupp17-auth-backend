@@ -74,7 +74,6 @@ public class RegisterControllerTest {
 
     @Before
     public void init() {
-
         this.mockMvc = standaloneSetup(new IotBackofficeAuthApplication()).build();
         User user = new User("magnus", "test@example.com", "-----", "123");
     }

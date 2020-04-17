@@ -5,6 +5,7 @@ import com.fredriksonsound.iot_backoffice_auth.model.ValidationError;
 import com.fredriksonsound.iot_backoffice_auth.web.CreatedResponse;
 import com.fredriksonsound.iot_backoffice_auth.web.ErrorResponse;
 import com.fredriksonsound.iot_backoffice_auth.web.OkResponse;
+import com.fredriksonsound.iot_backoffice_auth.web.UnauthorizedResponse;
 import com.google.gson.JsonObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,19 +21,19 @@ public class AuthController {
 
     @RequestMapping(value = "/auth/login", method = RequestMethod.POST)
     public ResponseEntity<JsonObject> loginWithCredentials(@RequestBody(required = false) AuthCredentials credentials) {
-        var genericError = ErrorResponse.JsonFromMessage("invalid credentials");
+        var genericError = ErrorResponse.JsonFromMessage("missing credentials");
         try { credentials.validate(); }
         catch (ValidationError | NullPointerException v)
             { return genericError.collect(); }
 
-        if(authService.validateUserPassword(credentials.email, credentials.password)) {
-            var tokenPair = authService.generateAndSaveTokens(credentials.email);
+        if(authService.validateUserPassword(credentials.email(), credentials.password())) {
+            var tokenPair = authService.generateAndSaveTokens(credentials.email());
             JsonObject data = new JsonObject();
             data.addProperty("token", tokenPair.first);
             data.addProperty("refreshtoken", tokenPair.second);
             return new CreatedResponse<>(data).collect();
         }
-        return ErrorResponse.JsonFromMessage("invalid login").collect();
+        return UnauthorizedResponse.JsonFromMessage("invalid login").collect();
     }
 
     @RequestMapping(value = "/auth/logout", method = RequestMethod.POST)
@@ -43,8 +44,14 @@ public class AuthController {
     }
 
 
-    static class AuthCredentials implements ValidationError.Validatable {
+    public static class AuthCredentials implements ValidationError.Validatable {
         String password, email;
+
+        public AuthCredentials(String email, String password) {
+            this.email = email;
+            this.password = password;
+        }
+
         public String password() {
             return password;
         }

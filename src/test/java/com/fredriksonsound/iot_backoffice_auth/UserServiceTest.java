@@ -7,7 +7,6 @@ import com.fredriksonsound.iot_backoffice_auth.Data.UserRepository;
 import com.fredriksonsound.iot_backoffice_auth.endpoint.RegisterController;
 import com.fredriksonsound.iot_backoffice_auth.model.User;
 import com.fredriksonsound.iot_backoffice_auth.model.ValidationError;
-import org.junit.Before;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -37,9 +36,6 @@ public class UserServiceTest {
             return new UserService();
         }
     }
-
-//      @LocalServerPort
-//      private String port;
 
     @MockBean
     AgencyRepository agencyRepository;
@@ -107,5 +103,3 @@ public class UserServiceTest {
         assertThat(e.errorCode).isEqualTo(ERROR_CODE.NONEXISTENT_AGENCY);
     }
 }
-
-

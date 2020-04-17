@@ -27,13 +27,6 @@ public class AuthService {
         } catch (NoSuchElementException e) {
             return false;
         }
-        var h = PasswordUtils.Hash("test");
-        var k = PasswordUtils.verify("test", h);
-        // Salt 8 bytes SHA1PRNG, HmacSHA1, 1000 iterations, ISO-8859-1
-        String s = new SimplePBKDF2().deriveKeyFormatted("password");
-// s === "CCD16F76AF3DE30A:1000:B53849A7E20883C77618D3AD16269F98BC4DCA19"
-        boolean ok = new SimplePBKDF2().verifyKeyFormatted(s, "password");
-        
         return PasswordUtils.verify(password, user.pass_hash());
     }
 
@@ -43,7 +36,7 @@ public class AuthService {
         Pair<String, String> tokens = new Pair (Tokens.getAccessToken(tokenId, email), Tokens.retRefreshToken(refreshTokenId, email));
         Token refreshToken = new Token(refreshTokenId, tokens.second);
         tokenRepository.save(refreshToken);
-        return new Pair(tokens.second, refreshTokenId);
+        return new Pair(tokens.first, refreshTokenId);
     }
 
     public boolean deleteRefreshToken(String id) {
