@@ -9,6 +9,7 @@ import com.google.gson.JsonObject;
 import org.junit.Before;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -28,6 +29,7 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standal
  */
 @SpringBootTest
 @AutoConfigureMockMvc
+@AutoConfigureTestDatabase(replace= AutoConfigureTestDatabase.Replace.ANY)
 public class AuthControllerTest {
     @Autowired
     private MockMvc mockMvc;
