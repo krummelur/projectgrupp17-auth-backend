@@ -2,16 +2,42 @@ package Controller;
 
 import com.fredriksonsound.iot_backoffice_auth.model.ValidationError;
 import io.jsonwebtoken.*;
+import org.apache.tomcat.util.codec.binary.Base64;
 
-import javax.crypto.spec.SecretKeySpec;
-import java.security.Key;
+import java.security.*;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.PKCS8EncodedKeySpec;
+import java.security.spec.X509EncodedKeySpec;
 import java.util.Date;
 
+
 public class Tokens {
-    private static final String API_SECRET_KEY = "0";
+    private static class Keys {
+        PublicKey pub = null;
+        PrivateKey priv = null;
+        PublicKey getPublic() {return pub;}
+        PrivateKey getPrivate() {return priv; }
+        private Keys() {
+            String privKey = System. getenv("JWT_PRIV_KEY");
+            String pubKey = System. getenv("JWT_PUB_KEY");
+            try { this.priv =  KeyFactory.getInstance("RSA").generatePrivate(new PKCS8EncodedKeySpec(new Base64().decode(privKey.getBytes())));
+            } catch (InvalidKeySpecException | NoSuchAlgorithmException e) {
+                e.printStackTrace();
+                System.exit(-1);
+            }
+            try {
+                this.pub = KeyFactory.getInstance("RSA").generatePublic(new X509EncodedKeySpec(new Base64().decode(pubKey.getBytes())));
+            } catch (InvalidKeySpecException | NoSuchAlgorithmException e) {
+                e.printStackTrace();
+                System.exit(-1);
+            }
+        }
+    }
+
     private static final long TOKEN_LIFETIME_MILLIS = 30000;
     private static final long REFRESH_TOKEN_LIFETIME_MILLIS = 1000L*60L*60L*24L*60L; //60 days
     private static final String ISSUER = "projektgrupp17";
+    private static Keys keys = new Keys();
 
     /**
      * Generates a short lived access token
@@ -40,34 +66,22 @@ public class Tokens {
      * @throws ValidationError
      */
     public static Jwt decodeJwToken(String jwToken) throws ValidationError {
-        JwtParser parser = Jwts.parser().setSigningKey(API_SECRET_KEY.getBytes());
+        JwtParser parser = Jwts.parser().setSigningKey(keys.getPublic());
         return parser.parse(jwToken);
     }
 
     //https://developer.okta.com/blog/2018/10/31/jwts-with-java
     private static String createJWT(String id, String user, long lifetime) {
-        //The JWT signature algorithm we will be using to sign the token
-        SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
-
-        //We will sign our JWT with our ApiKey secret
-        byte[] apiKeySecretBytes = API_SECRET_KEY.getBytes();
-        Key signingKey = new SecretKeySpec(apiKeySecretBytes, signatureAlgorithm.getJcaName());
-
-        //Let's set the JWT Claims
+        //Using an asymmetric signing algorithm so tokens can be verified without sharing private key with other services.
         JwtBuilder builder = Jwts.builder()
                 .setId(id)
                 .setIssuedAt(new Date())
                 .setSubject(user)
                 .setIssuer(ISSUER)
-                .signWith(signatureAlgorithm, signingKey);
+                .signWith(SignatureAlgorithm.RS256, keys.getPrivate());
 
-        //if it has been specified, let's add the expiration
-            Date exp = new Date(System.currentTimeMillis() + lifetime);
-            builder.setExpiration(exp);
-
-        JwtParser parser = Jwts.parser().setSigningKey(API_SECRET_KEY.getBytes());
-        parser.parse(builder.compact());
-        //Builds the JWT and serializes it to a compact, URL-safe string
+        Date exp = new Date(System.currentTimeMillis() + lifetime);
+        builder.setExpiration(exp);
         return builder.compact();
     }
 }
