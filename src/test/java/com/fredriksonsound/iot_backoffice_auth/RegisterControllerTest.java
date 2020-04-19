@@ -1,6 +1,7 @@
 package com.fredriksonsound.iot_backoffice_auth;
 
-import Controller.UserService;
+import com.fredriksonsound.iot_backoffice_auth.service.ERROR_CODE;
+import com.fredriksonsound.iot_backoffice_auth.service.UserService;
 import com.fredriksonsound.iot_backoffice_auth.model.User;
 import com.fredriksonsound.iot_backoffice_auth.model.ValidationError;
 import com.google.gson.JsonObject;

@@ -1,5 +1,4 @@
 package com.fredriksonsound.iot_backoffice_auth.model;
-import com.fredriksonsound.iot_backoffice_auth.endpoint.RegisterController;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;

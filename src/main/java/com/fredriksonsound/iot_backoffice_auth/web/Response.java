@@ -9,5 +9,5 @@ import org.springframework.http.ResponseEntity;
  * @param <T> body type
  */
 public interface Response<T> {
-    public ResponseEntity<T> collect();
+    ResponseEntity<T> collect();
 }

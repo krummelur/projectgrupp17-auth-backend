@@ -16,7 +16,7 @@ public class OkResponse<T> implements Response<T> {
         var json = new JsonObject();
         json.addProperty("status", "success");
         json.addProperty("message", message);
-        return new OkResponse<JsonObject>(json);
+        return new OkResponse<>(json);
     }
 
     public OkResponse(T body) {
@@ -25,6 +25,6 @@ public class OkResponse<T> implements Response<T> {
 
     @Override
     public ResponseEntity<T> collect() {
-        return new ResponseEntity<T>(this.body, HttpStatus.OK);
+        return new ResponseEntity<>(this.body, HttpStatus.OK);
     }
 }

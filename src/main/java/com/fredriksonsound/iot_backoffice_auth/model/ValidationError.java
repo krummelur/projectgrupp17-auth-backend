@@ -1,6 +1,6 @@
 package com.fredriksonsound.iot_backoffice_auth.model;
 
-import com.fredriksonsound.iot_backoffice_auth.ERROR_CODE;
+import com.fredriksonsound.iot_backoffice_auth.service.ERROR_CODE;
 
 /**
  * ValidationError instances represent an error in user submitted data
