@@ -9,7 +9,7 @@
  * /			=> api version
  *
  * Author: Magnus Fredrikson
- * @version 0.5.0
+ * @version 1.0.0
  */
 
 package com.fredriksonsound.iot_backoffice_auth;

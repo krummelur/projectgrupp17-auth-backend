@@ -17,6 +17,6 @@ public class Default {
      */
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public ResponseEntity<String> index() {
-        return new OkResponse<String>("auth server v0.5.0").collect();
+        return new OkResponse<String>("auth server v1.0.0").collect();
     }
 }
