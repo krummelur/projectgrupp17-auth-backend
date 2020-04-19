@@ -22,9 +22,10 @@ import static org.mockito.Mockito.when;
 /**
  * Tests the AuthService
  */
+
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@AutoConfigureTestDatabase(replace= AutoConfigureTestDatabase.Replace.NONE)
+@AutoConfigureTestDatabase(replace= AutoConfigureTestDatabase.Replace.ANY)
 public class AuthServiceTest {
     @TestConfiguration
     static class AuthServiceTestConf {

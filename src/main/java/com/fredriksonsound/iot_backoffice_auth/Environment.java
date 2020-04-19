@@ -17,9 +17,11 @@ public class Environment {
     public final String SQL_USER;
     public final String JWT_PUB_KEY;
     public final String JWT_PRIV_KEY;
+    public final String ENVIRONMENT;
     public Environment() {
         boolean prod = false;
-        if(System.getenv(ENV_STR).equals(PROD_STR))
+        ENVIRONMENT = System.getenv(ENV_STR);
+        if(ENVIRONMENT.equals(PROD_STR))
             prod = true;
         SQL_HOST = System.getenv(prod ? SQL_HOST_STR : SQL_HOST_STR+TEST);
         SQL_DB = System.getenv(prod ? SQL_DB_NAME_STR :  SQL_DB_NAME_STR+TEST );

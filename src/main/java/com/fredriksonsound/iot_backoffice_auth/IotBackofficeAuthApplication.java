@@ -34,15 +34,7 @@ public class IotBackofficeAuthApplication {
 	 * @param args CliAgs
 	 */
 	public static void main(String[] args) throws ValidationError {
-		SpringApplication app = new SpringApplication(IotBackofficeAuthApplication.class);
-
-
-		Properties properties = new Properties();
-		var env = new Environment();
-		properties.put("spring.datasource.username", env.SQL_USER);
-		properties.put("spring.datasource.password", env.SQL_PASS);
-		properties.put("spring.datasource.url",  "jdbc:mysql://" + env.SQL_HOST + "/" + env.SQL_DB + "?reconnect=true");
-		app.setDefaultProperties(properties);
-		app.run(args);
+		System.out.println("#############################\n!!!!  STARTING APP IN " + new Environment().ENVIRONMENT + "!!!\n#############################");
+		SpringApplication.run(IotBackofficeAuthApplication.class, args);
 	}
 }

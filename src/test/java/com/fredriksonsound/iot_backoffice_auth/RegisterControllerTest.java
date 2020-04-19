@@ -30,7 +30,6 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standal
 @SpringBootTest
 @AutoConfigureMockMvc
 public class RegisterControllerTest {
-
     private RegisterCredentials successUser =
             new RegisterCredentials("username", "Password1", "email@success.com", "agency");
     private RegisterCredentials invalidEmailIUser =
