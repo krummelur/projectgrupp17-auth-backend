@@ -28,6 +28,7 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standal
  */
 @SpringBootTest
 @AutoConfigureMockMvc
+
 public class AuthControllerTest {
     @Autowired
     private MockMvc mockMvc;

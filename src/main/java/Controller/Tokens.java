@@ -1,5 +1,6 @@
 package Controller;
 
+import com.fredriksonsound.iot_backoffice_auth.Environment;
 import com.fredriksonsound.iot_backoffice_auth.model.ValidationError;
 import io.jsonwebtoken.*;
 import org.apache.tomcat.util.codec.binary.Base64;
@@ -18,8 +19,9 @@ public class Tokens {
         PublicKey getPublic() {return pub;}
         PrivateKey getPrivate() {return priv; }
         private Keys() {
-            String privKey = System. getenv("JWT_PRIV_KEY");
-            String pubKey = System. getenv("JWT_PUB_KEY");
+            var env = new Environment();
+            String privKey = env.JWT_PRIV_KEY;
+            String pubKey = env.JWT_PUB_KEY;
             try { this.priv =  KeyFactory.getInstance("RSA").generatePrivate(new PKCS8EncodedKeySpec(new Base64().decode(privKey.getBytes())));
             } catch (InvalidKeySpecException | NoSuchAlgorithmException e) {
                 e.printStackTrace();
@@ -34,7 +36,7 @@ public class Tokens {
         }
     }
 
-    private static final long TOKEN_LIFETIME_MILLIS = 30000;
+    private static final long TOKEN_LIFETIME_MILLIS = 1000 * 60 * 3;
     private static final long REFRESH_TOKEN_LIFETIME_MILLIS = 1000L*60L*60L*24L*60L; //60 days
     private static final String ISSUER = "projektgrupp17";
     private static Keys keys = new Keys();

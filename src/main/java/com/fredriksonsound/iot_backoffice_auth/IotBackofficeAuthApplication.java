@@ -14,9 +14,17 @@
 
 package com.fredriksonsound.iot_backoffice_auth;
 
+import Controller.Tokens;
+import com.fredriksonsound.iot_backoffice_auth.model.ValidationError;
+import io.jsonwebtoken.impl.DefaultClaims;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.couchbase.CouchbaseProperties;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+
+import java.util.Properties;
 
 @SpringBootApplication
 public class IotBackofficeAuthApplication {
@@ -25,7 +33,16 @@ public class IotBackofficeAuthApplication {
 	 * Starts a spring application
 	 * @param args CliAgs
 	 */
-	public static void main(String[] args) {
-		SpringApplication.run(IotBackofficeAuthApplication.class, args);
+	public static void main(String[] args) throws ValidationError {
+		SpringApplication app = new SpringApplication(IotBackofficeAuthApplication.class);
+
+
+		Properties properties = new Properties();
+		var env = new Environment();
+		properties.put("spring.datasource.username", env.SQL_USER);
+		properties.put("spring.datasource.password", env.SQL_PASS);
+		properties.put("spring.datasource.url",  "jdbc:mysql://" + env.SQL_HOST + "/" + env.SQL_DB + "?reconnect=true");
+		app.setDefaultProperties(properties);
+		app.run(args);
 	}
 }
