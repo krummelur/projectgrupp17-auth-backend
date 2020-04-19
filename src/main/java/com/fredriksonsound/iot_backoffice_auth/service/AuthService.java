@@ -1,22 +1,23 @@
-package Controller;
+package com.fredriksonsound.iot_backoffice_auth.service;
 
-import com.fredriksonsound.iot_backoffice_auth.Data.TokenRepository;
-import com.fredriksonsound.iot_backoffice_auth.Data.UserRepository;
-import com.fredriksonsound.iot_backoffice_auth.ERROR_CODE;
+import com.fredriksonsound.iot_backoffice_auth.data.TokenRepository;
+import com.fredriksonsound.iot_backoffice_auth.data.UserRepository;
 import com.fredriksonsound.iot_backoffice_auth.model.RefreshToken;
 import com.fredriksonsound.iot_backoffice_auth.model.User;
 import com.fredriksonsound.iot_backoffice_auth.model.ValidationError;
+import com.fredriksonsound.iot_backoffice_auth.model.util.PasswordUtils;
 import com.fredriksonsound.iot_backoffice_auth.util.Pair;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureException;
 import io.jsonwebtoken.impl.DefaultClaims;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.NoSuchElementException;
 import java.util.UUID;
 
-
+@Component
 @Service
 public class AuthService implements IAuthService {
     @Autowired
@@ -34,7 +35,7 @@ public class AuthService implements IAuthService {
     public boolean validateUserPassword(String email, String password) {
         User user;
         try {
-            user = userRepository.findById(email).get();
+            user = userRepository.findById(email.toLowerCase()).get();
         } catch (NoSuchElementException e) {
             return false;
         }
@@ -50,7 +51,10 @@ public class AuthService implements IAuthService {
     public Pair<String, String> generateAndSaveTokens(String email) {
         var tokenId = UUID.randomUUID().toString();
         var refreshTokenId = UUID.randomUUID().toString();
-        Pair<String, String> tokens = new Pair (Tokens.getAccessToken(tokenId, email), Tokens.retRefreshToken(refreshTokenId, email));
+        Pair<String, String> tokens =
+                new Pair (Tokens.getAccessToken(tokenId, email.toLowerCase()),
+                          Tokens.getRefreshToken(refreshTokenId, email.toLowerCase()));
+
         RefreshToken refreshToken = new RefreshToken(refreshTokenId, tokens.second);
         tokenRepository.save(refreshToken);
         return new Pair(tokens.first, refreshTokenId);

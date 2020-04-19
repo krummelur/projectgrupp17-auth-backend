@@ -1,12 +1,6 @@
-package Controller;
+package com.fredriksonsound.iot_backoffice_auth.model.util;
 
-import de.rtner.misc.BinTools;
-import de.rtner.security.auth.spi.PBKDF2Engine;
-import de.rtner.security.auth.spi.PBKDF2Parameters;
 import de.rtner.security.auth.spi.SimplePBKDF2;
-
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
 
 public class PasswordUtils {
     /**

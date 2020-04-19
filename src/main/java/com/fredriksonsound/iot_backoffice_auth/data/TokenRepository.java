@@ -1,4 +1,4 @@
-package com.fredriksonsound.iot_backoffice_auth.Data;
+package com.fredriksonsound.iot_backoffice_auth.data;
 
 import com.fredriksonsound.iot_backoffice_auth.model.RefreshToken;
 import org.springframework.data.repository.CrudRepository;

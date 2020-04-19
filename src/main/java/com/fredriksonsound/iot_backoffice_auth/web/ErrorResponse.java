@@ -16,7 +16,7 @@ public class ErrorResponse<T> implements Response<T> {
         var json = new JsonObject();
         json.addProperty("status", "error");
         json.addProperty("message", message);
-        return new ErrorResponse<JsonObject>(json);
+        return new ErrorResponse<>(json);
     }
 
     public ErrorResponse(T body, HttpStatus status) {

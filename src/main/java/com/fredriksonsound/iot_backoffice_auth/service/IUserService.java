@@ -1,4 +1,4 @@
-package Controller;
+package com.fredriksonsound.iot_backoffice_auth.service;
 
 import com.fredriksonsound.iot_backoffice_auth.endpoint.RegisterController;
 import com.fredriksonsound.iot_backoffice_auth.model.ValidationError;
