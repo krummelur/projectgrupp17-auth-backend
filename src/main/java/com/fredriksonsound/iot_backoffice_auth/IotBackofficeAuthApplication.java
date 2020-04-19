@@ -35,6 +35,7 @@ public class IotBackofficeAuthApplication {
 	 */
 	public static void main(String[] args) throws ValidationError {
 		System.out.println("#############################\n!!!!  STARTING APP IN " + new Environment().ENVIRONMENT + "!!!\n#############################");
+
 		SpringApplication.run(IotBackofficeAuthApplication.class, args);
 	}
 }
