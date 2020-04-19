@@ -6,6 +6,8 @@ import com.fredriksonsound.iot_backoffice_auth.ERROR_CODE;
 import com.fredriksonsound.iot_backoffice_auth.endpoint.RegisterController;
 import com.fredriksonsound.iot_backoffice_auth.model.User;
 import com.fredriksonsound.iot_backoffice_auth.model.ValidationError;
+import com.fredriksonsound.iot_backoffice_auth.model.util.PasswordUtils;
+import com.fredriksonsound.iot_backoffice_auth.model.util.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
