@@ -19,9 +19,8 @@ public class Tokens {
         PublicKey getPublic() {return pub;}
         PrivateKey getPrivate() {return priv; }
         private Keys() {
-            var env = new Environment();
-            String privKey = env.JWT_PRIV_KEY;
-            String pubKey = env.JWT_PUB_KEY;
+            String privKey = System.getenv(Environment.JWT_PRIV_KEY_STR);
+            String pubKey = System.getenv(Environment.JWT_PUB_KEY_STR);
             try { this.priv =  KeyFactory.getInstance("RSA").generatePrivate(new PKCS8EncodedKeySpec(new Base64().decode(privKey.getBytes())));
             } catch (InvalidKeySpecException | NoSuchAlgorithmException e) {
                 e.printStackTrace();
