@@ -1,7 +1,7 @@
 package com.fredriksonsound.iot_backoffice_auth.endpoint;
 
-import Controller.AuthService;
-import com.fredriksonsound.iot_backoffice_auth.ERROR_CODE;
+import com.fredriksonsound.iot_backoffice_auth.service.AuthService;
+import com.fredriksonsound.iot_backoffice_auth.service.ERROR_CODE;
 import com.fredriksonsound.iot_backoffice_auth.model.ValidationError;
 import com.fredriksonsound.iot_backoffice_auth.web.CreatedResponse;
 import com.fredriksonsound.iot_backoffice_auth.web.ErrorResponse;

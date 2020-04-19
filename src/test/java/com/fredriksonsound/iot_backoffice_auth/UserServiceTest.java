@@ -1,9 +1,9 @@
 package com.fredriksonsound.iot_backoffice_auth;
 
-import Controller.IUserService;
-import Controller.UserService;
-import com.fredriksonsound.iot_backoffice_auth.Data.AgencyRepository;
-import com.fredriksonsound.iot_backoffice_auth.Data.UserRepository;
+import com.fredriksonsound.iot_backoffice_auth.service.ERROR_CODE;
+import com.fredriksonsound.iot_backoffice_auth.service.UserService;
+import com.fredriksonsound.iot_backoffice_auth.data.AgencyRepository;
+import com.fredriksonsound.iot_backoffice_auth.data.UserRepository;
 import com.fredriksonsound.iot_backoffice_auth.endpoint.RegisterController;
 import com.fredriksonsound.iot_backoffice_auth.model.User;
 import com.fredriksonsound.iot_backoffice_auth.model.ValidationError;
@@ -13,9 +13,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit4.SpringRunner;
 import java.util.Optional;
 
@@ -27,17 +25,11 @@ import static org.mockito.Mockito.when;
 /**
  * Tests the UserService
  */
+
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureTestDatabase(replace= AutoConfigureTestDatabase.Replace.ANY)
 public class UserServiceTest {
-    @TestConfiguration
-    static class UserServiceTestConf {
-        @Bean
-        public IUserService userService() {
-            return new UserService();
-        }
-    }
 
     @MockBean
     AgencyRepository agencyRepository;
@@ -52,6 +44,7 @@ public class UserServiceTest {
         User user = new User("magnus", "test@example.com", "-----", "123");
         when(uRepository.findById("test@example.com")).thenReturn(Optional.of(user));
         when(uRepository.existsById("test@example.com")).thenReturn(true);
+        when(uRepository.existsByUsername("existingusername")).thenReturn(true);
         when(agencyRepository.existsById("123")).thenReturn(true);
     }
 
@@ -64,11 +57,17 @@ public class UserServiceTest {
 
     @Test
     public void it_throws_correct_error_on_on_conflicting_user() {
-        RegisterController.RegisterCredentials rc =
+        RegisterController.RegisterCredentials confictEmail =
                 new RegisterController.RegisterCredentials("magnus", "abC123", "test@example.com", "123");
 
-        ValidationError e = assertThrows(ValidationError.class, () -> { userService.saveNewUser(rc); }, "validationException thrown when adding existing user" );
+        RegisterController.RegisterCredentials conflictUsername =
+                new RegisterController.RegisterCredentials("existingusername", "abC123", "unique@example.com", "123");
+
+        ValidationError e = assertThrows(ValidationError.class, () -> { userService.saveNewUser(confictEmail); }, "validationException thrown when adding existing user" );
         assertThat(e.errorCode).isEqualTo(ERROR_CODE.CONFLICTING_USER);
+
+        ValidationError e2 = assertThrows(ValidationError.class, () -> { userService.saveNewUser(conflictUsername); }, "validationException thrown when adding existing user" );
+        assertThat(e2.errorCode).isEqualTo(ERROR_CODE.CONFLICTING_USER);
     }
 
     @Test

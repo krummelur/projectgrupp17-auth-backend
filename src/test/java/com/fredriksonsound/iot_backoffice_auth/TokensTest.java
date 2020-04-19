@@ -1,5 +1,5 @@
 package com.fredriksonsound.iot_backoffice_auth;
-import Controller.Tokens;
+import com.fredriksonsound.iot_backoffice_auth.service.Tokens;
 import com.fredriksonsound.iot_backoffice_auth.model.ValidationError;
 import io.jsonwebtoken.SignatureException;
 import io.jsonwebtoken.impl.DefaultClaims;

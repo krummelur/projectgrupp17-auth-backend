@@ -9,7 +9,7 @@
  * /			=> api version
  *
  * Author: Magnus Fredrikson
- * @version 1.0.0
+ * @version 1.0.1
  */
 
 package com.fredriksonsound.iot_backoffice_auth;
@@ -20,12 +20,14 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 public class IotBackofficeAuthApplication {
+	public static final String API_VERSION = "1.0.1";
+
 	/**
 	 * Application entrypoint
 	 * Starts a spring application
 	 * @param args CliAgs
 	 */
-	public static void main(String[] args) throws ValidationError {
+	public static void main(String[] args) {
 		System.out.println("#############################\n!!!!  STARTING APP IN " + new Environment().ENVIRONMENT + "!!!\n#############################");
 
 		SpringApplication.run(IotBackofficeAuthApplication.class, args);

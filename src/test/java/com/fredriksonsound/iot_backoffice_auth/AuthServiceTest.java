@@ -1,8 +1,8 @@
 package com.fredriksonsound.iot_backoffice_auth;
 
-import Controller.*;
-import com.fredriksonsound.iot_backoffice_auth.Data.TokenRepository;
-import com.fredriksonsound.iot_backoffice_auth.Data.UserRepository;
+import com.fredriksonsound.iot_backoffice_auth.service.*;
+import com.fredriksonsound.iot_backoffice_auth.data.TokenRepository;
+import com.fredriksonsound.iot_backoffice_auth.data.UserRepository;
 import com.fredriksonsound.iot_backoffice_auth.model.User;
 import com.fredriksonsound.iot_backoffice_auth.model.util.PasswordUtils;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,9 +11,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit4.SpringRunner;
 import java.util.Optional;
 
@@ -23,19 +21,10 @@ import static org.mockito.Mockito.when;
 /**
  * Tests the AuthService
  */
-
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureTestDatabase(replace= AutoConfigureTestDatabase.Replace.ANY)
 public class AuthServiceTest {
-    @TestConfiguration
-    static class AuthServiceTestConf {
-        @Bean
-        public IAuthService userService() {
-            return new AuthService();
-        }
-    }
-
     private String nonexistentUser = "test@nonexistent.com";
     private String existentUser = "test@existent.com";
     private String existentUserValidPassword = "Password1";
@@ -74,3 +63,4 @@ public class AuthServiceTest {
         assertThat(authService.validateUserPassword(existentUser, existentUserInvalidPassword)).isEqualTo(false);
     }
 }
+

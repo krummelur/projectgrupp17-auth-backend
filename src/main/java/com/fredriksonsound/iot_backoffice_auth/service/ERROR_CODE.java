@@ -1,4 +1,4 @@
-package com.fredriksonsound.iot_backoffice_auth;
+package com.fredriksonsound.iot_backoffice_auth.service;
 
 /**
  * Error codes for the view layer to use in generating user messages
