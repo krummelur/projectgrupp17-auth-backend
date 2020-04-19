@@ -36,7 +36,7 @@ public class Tokens {
     }
 
     private static final long TOKEN_LIFETIME_MILLIS = 1000 * 60 * 3;
-    private static final long REFRESH_TOKEN_LIFETIME_MILLIS = 1000L*60L*60L*24L*60L; //60 days
+    private static final long REFRESH_TOKEN_LIFETIME_MILLIS = 1000L*60L*60L*24L*30L; //30 days
     private static final String ISSUER = "projektgrupp17";
     private static Keys keys = new Keys();
 
@@ -56,7 +56,7 @@ public class Tokens {
      * @param user the user the token is valid for
      * @return a long lived refresh token
      */
-    public static String retRefreshToken(String id, String user) {
+    public static String getRefreshToken(String id, String user) {
         return createJWT(id, user, REFRESH_TOKEN_LIFETIME_MILLIS);
     }
 

@@ -4,6 +4,7 @@ import Controller.*;
 import com.fredriksonsound.iot_backoffice_auth.Data.TokenRepository;
 import com.fredriksonsound.iot_backoffice_auth.Data.UserRepository;
 import com.fredriksonsound.iot_backoffice_auth.model.User;
+import com.fredriksonsound.iot_backoffice_auth.model.util.PasswordUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;

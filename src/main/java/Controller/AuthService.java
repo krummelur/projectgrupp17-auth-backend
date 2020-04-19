@@ -6,6 +6,7 @@ import com.fredriksonsound.iot_backoffice_auth.ERROR_CODE;
 import com.fredriksonsound.iot_backoffice_auth.model.RefreshToken;
 import com.fredriksonsound.iot_backoffice_auth.model.User;
 import com.fredriksonsound.iot_backoffice_auth.model.ValidationError;
+import com.fredriksonsound.iot_backoffice_auth.model.util.PasswordUtils;
 import com.fredriksonsound.iot_backoffice_auth.util.Pair;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureException;
@@ -50,7 +51,7 @@ public class AuthService implements IAuthService {
     public Pair<String, String> generateAndSaveTokens(String email) {
         var tokenId = UUID.randomUUID().toString();
         var refreshTokenId = UUID.randomUUID().toString();
-        Pair<String, String> tokens = new Pair (Tokens.getAccessToken(tokenId, email), Tokens.retRefreshToken(refreshTokenId, email));
+        Pair<String, String> tokens = new Pair (Tokens.getAccessToken(tokenId, email), Tokens.getRefreshToken(refreshTokenId, email));
         RefreshToken refreshToken = new RefreshToken(refreshTokenId, tokens.second);
         tokenRepository.save(refreshToken);
         return new Pair(tokens.first, refreshTokenId);
