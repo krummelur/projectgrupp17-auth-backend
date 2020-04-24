@@ -32,6 +32,11 @@ public class Tokens {
     private static final String ISSUER = "projektgrupp17-auth";
     private static Keys keys = new Keys();
 
+    public static String getCustomToken(String id, String user, long lifetime) {
+        return createJWT(id, user, lifetime);
+    }
+
+
     /**
      * Generates a short lived access token
      * @param id the id of the token

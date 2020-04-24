@@ -43,7 +43,7 @@ public class AuthService implements IAuthService {
     }
 
     /**
-     * Generates a new access token and rtefresh token.
+     * Generates a new access token and refresh token.
      * @param email
      * @return and access token and a refresh token id.
      */
@@ -74,7 +74,7 @@ public class AuthService implements IAuthService {
     }
 
     /**
-     * Generates a new access token given an expired accesstoken and a ferfresh token id
+     * Generates a new access token given an expired accesstoken and a refresh token id
      * @param access
      * @param refreshId
      * @return a new access token
@@ -88,7 +88,8 @@ public class AuthService implements IAuthService {
         DefaultClaims parsed = null;
         try { parsed = (DefaultClaims) Tokens.decodeJwToken(access).getBody();}
         catch (MalformedJwtException | SignatureException | IllegalArgumentException e) {
-        e.printStackTrace();  throw new ValidationError(ERROR_CODE.INVALID_JWT);
+            System.err.println("####### SOMEONE TRIED TO USE A TAMPERED WITH TOKEN ####### ERROR:");
+            e.printStackTrace();  throw new ValidationError(ERROR_CODE.INVALID_JWT);
         }
 
         if((Integer)parsed.get("exp") > System.currentTimeMillis()/1000)
