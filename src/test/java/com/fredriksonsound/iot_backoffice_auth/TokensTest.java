@@ -19,8 +19,8 @@ public class TokensTest {
         final long expiryFromNow = System.currentTimeMillis() + 1000*60*3;
         String tokenString = Tokens.getAccessToken("SOMEID", "SOMEUSER");
         DefaultClaims c = (DefaultClaims) Tokens.decodeJwToken(tokenString).getBody();
-        assertThat("SOMEID").isEqualTo(c.getId());
-        assertThat("SOMEUSER").isEqualTo(c.getSubject());
+        assertThat(c.getId()).isEqualTo("SOMEID");
+        assertThat(c.getSubject()).isEqualTo("SOMEUSER");
         assertThat(c.getExpiration()).isCloseTo(new Date(expiryFromNow), 10000);
     }
 

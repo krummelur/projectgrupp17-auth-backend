@@ -7,15 +7,11 @@ import com.fredriksonsound.iot_backoffice_auth.service.ERROR_CODE;
  * See <code>ERROR_CODE</code> enum.
  */
 public class ValidationError extends Exception {
-    public ERROR_CODE errorCode = ERROR_CODE.NONE;
+    public ERROR_CODE errorCode;
     public ValidationError(ERROR_CODE err) {
         super();
         this.errorCode = err;
     }
-    public ValidationError(String mess) {
-        super(mess);
-    }
-
 
     public interface Validatable {
         boolean validate() throws ValidationError;

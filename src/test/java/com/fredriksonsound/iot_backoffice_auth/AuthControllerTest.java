@@ -5,6 +5,7 @@ import com.fredriksonsound.iot_backoffice_auth.service.AuthService;
 import com.fredriksonsound.iot_backoffice_auth.endpoint.AuthController;
 import com.fredriksonsound.iot_backoffice_auth.model.ValidationError;
 import com.fredriksonsound.iot_backoffice_auth.service.ERROR_CODE;
+import com.fredriksonsound.iot_backoffice_auth.service.Tokens;
 import com.fredriksonsound.iot_backoffice_auth.util.Pair;
 import com.google.gson.JsonObject;
 import org.junit.Before;
@@ -146,5 +147,17 @@ public class AuthControllerTest {
                 .andExpect(status().isUnauthorized())
                 .andExpect(content().string(containsString("\"status\":\"error\"")))
                 .andExpect(content().string(containsString("\"message\":\"invalid jwt\"")));
+    }
+
+    @Test
+    public void refresh_success() throws Exception {
+        String tkn = Tokens.getAccessToken("UUID", "SOMEUSER");
+        when(authService.refresh(expiredAuthToken, nonExpiredRefreshToken)).thenReturn(tkn);
+        this.mockMvc.perform(post("/auth/refresh").contentType(MediaType.APPLICATION_JSON)
+                .header("Auth-Token", expiredAuthToken)
+                .header("Refresh-Token", nonExpiredRefreshToken))
+                .andExpect(status().isCreated())
+                .andExpect(content().string(containsString("\"status\":\"success\"")))
+                .andExpect(content().string(containsString("\"token\":\"" + tkn + "\"")));
     }
 }

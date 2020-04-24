@@ -30,11 +30,11 @@ public class User {
     @Override
     public String toString() {
         return new StringBuilder("User: {").
-        append("{\n\tusername:").append(username).
+        append("\n\tusername:").append(username).
         append(",\n\t email:").append(email).
         append(",\n\t password_hash:").append(pass_hash).
         append(",\n\t agency:").append(agency).
-        append(",\n\t email=").append(email).
+        append(",\n\t email:").append(email).
         append("\n}")
         .toString();
     }
