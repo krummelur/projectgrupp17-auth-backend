@@ -38,7 +38,9 @@ agency: <an existing agency>
 
 ### Login
 **URL:** auth/login (post)
+
 **DESCRIPTION:** Logs in an existing user, body:
+
 **BODY:**
 ```
 {
@@ -47,7 +49,9 @@ password: <password>,
 }
 ```
 **RESULTSUCCESS:** 201 Returns a refresh-token id, and an short-lived accesstoken.
+
 **RESULTERROR:** 400 on missing userdata 
+
 **RESULTERROR:** 401 with explanation on invalid/expired/etc. tokens
 
 ### Logout
