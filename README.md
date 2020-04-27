@@ -34,8 +34,6 @@ agency: <an existing agency>
 
 **RESULTERROR:** 400 on invalid username/email/password, or the username/email exists
 
-**RESULTERROR:** 401 on bad password/username combination
-
 ### Login
 **URL:** auth/login (post)
 
@@ -52,7 +50,7 @@ password: <password>,
 
 **RESULTERROR:** 400 on missing userdata 
 
-**RESULTERROR:** 401 with explanation on invalid/expired/etc. tokens
+**RESULTERROR:** 401 on bad password/username combination
 
 ### Logout
 **URL:** auth/logout (post)
@@ -66,7 +64,7 @@ password: <password>,
 ```
 **RESULTSUCCESS:** Always 200 when refresh token is sent
 
-**RESULTSUCCESS:** 400 if the refresh-token is missing
+**RESULTERROR:** 400 if the refresh-token is missing
 
 ### Refresh
 **URL:** auth/refresh
@@ -81,6 +79,7 @@ password: <password>,
 **RESULTERROR:** 400 if missing headers
 
 **RESULTERROR:** 401 with explanation on invalid/expired/etc. tokens
+
 
 # build
 * gradle build - builds and tests app and checks for test coverage.
