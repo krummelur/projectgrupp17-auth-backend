@@ -26,6 +26,11 @@ public class AuthController {
     @RequestMapping(value = "/auth/refresh", method = RequestMethod.POST)
     public ResponseEntity<JsonObject> refreshAccessToken(@RequestHeader(value = "Refresh-Token", required = false) String refresh,
                                                          @RequestHeader(value = "Auth-Token", required = false) String access)  {
+        if(refresh == null || refresh.equals(""))
+            return ErrorResponse.JsonFromMessage("NO refresh token in request").collect();
+        if(access == null || access.equals(""))
+            return ErrorResponse.JsonFromMessage("NO access token in request").collect();
+
         String newToken = null;
         try { newToken = authService.refresh(access, refresh); } catch (ValidationError v) {
             switch (v.errorCode) {
