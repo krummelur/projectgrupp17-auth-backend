@@ -55,7 +55,7 @@ public class AuthController {
      * @param credentials
      * @return an access token and refresh token id on success, error on fail.
      */
-    @CrossOrigin(origins ="http://localhost:3000/")
+    @CrossOrigin(origins ="*", allowedHeaders="*")
     @RequestMapping(value = "/auth/login", method = RequestMethod.POST)
     public ResponseEntity<JsonObject> loginWithCredentials(@RequestBody(required = false) AuthCredentials credentials) {
         var genericError = ErrorResponse.JsonFromMessage("missing credentials");
