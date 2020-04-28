@@ -5,19 +5,23 @@ implemented with spring testing with mockito
 ![Java CI with Gradle](https://github.com/krummelur/projectgrupp17-auth-backend/workflows/Java%20CI%20with%20Gradle/badge.svg?branch=master)
 
 
-## endpoints
+## Endpoints
 
-* / (get) 
+### Default
+**URL:** / (get) 
 
-get api version.
+**DESCRIPION:** get api version.
 
-```
-```
+**RESULTSUCCESS:** API version string
 
-* /register/    (post)
+**RESULTERROR:** NONE
 
-Registers a new user, body:
+### Register 
+**URL:** /register/    (post)
 
+**DESCRIPTION:** Registers a new user, body:
+
+**BODY:**
 ```
 {
 username: <username>,
@@ -26,38 +30,59 @@ password: <password>,
 agency: <an existing agency>
 }
 ```
+**RESULTSUCCESS:** 201
 
-* auth/login (post)
+**RESULTERROR:** 400 on invalid username/email/password, or the username/email exists
 
-Logs in an existing user, body:
+### Login
+**URL:** auth/login (post)
 
+**DESCRIPTION:** Logs in an existing user, body:
+
+**BODY:**
 ```
 {
 email: <email>,
 password: <password>,
 }
 ```
+**RESULTSUCCESS:** 201 Returns a refresh-token id, and an short-lived accesstoken.
 
-* auth/logout (post)
+**RESULTERROR:** 400 on missing userdata 
 
-Logs out an existing user, destroying the refresh token, headers:
+**RESULTERROR:** 401 on bad password/username combination
 
+### Logout
+**URL:** auth/logout (post)
+
+**DESCRIPTION:** Logs out an existing user, destroying the refresh token, headers:
+
+**HEADERS:**
+```
 * Auth-Token: <JWT-access-token>,
 * Refresh-Token: <refresh-token-id>
-
 ```
-```
-* auth/refresh
+**RESULTSUCCESS:** Always 200 when refresh token is sent
 
-Gets a new access-token from an expired access-token and non-expired refresh-token, headers:
+**RESULTERROR:** 400 if the refresh-token is missing
 
-* Auth-Token: <JWT-access-token>,
-* Refresh-Token: <refresh-token-id>
+### Refresh
+**URL:** auth/refresh
 
+**DESCRIPTION:** Gets a new access-token from an expired access-token and non-expired refresh-token, headers:
 ```
+- Auth-Token: <JWT-access-token>,
+- Refresh-Token: <refresh-token-id>
 ```
+**RESULTSUCCESS:** A short-lived JWT access token.
+
+**RESULTERROR:** 400 if missing headers
+
+**RESULTERROR:** 401 with explanation on invalid/expired/etc. tokens
+
+
 # build
-* gradle build
+* gradle build - builds and tests app and checks for test coverage.
 
 ## Environment
 * AUTH_IOT_ENVIRONMENT: PRODUCTION|TEST 
