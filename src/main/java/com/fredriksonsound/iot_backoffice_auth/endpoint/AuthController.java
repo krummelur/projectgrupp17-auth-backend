@@ -23,6 +23,7 @@ public class AuthController {
      * @param access the JWT access token
      * @return httpResponse
      */
+    @CrossOrigin(origins ="*", allowedHeaders="*")
     @RequestMapping(value = "/auth/refresh", method = RequestMethod.POST)
     public ResponseEntity<JsonObject> refreshAccessToken(@RequestHeader(value = "Refresh-Token", required = false) String refresh,
                                                          @RequestHeader(value = "Auth-Token", required = false) String access)  {
@@ -78,6 +79,7 @@ public class AuthController {
      * @param refresh
      * @return OK or Bad request
      */
+    @CrossOrigin(origins ="*", allowedHeaders="*")
     @RequestMapping(value = "/auth/logout", method = RequestMethod.POST)
     public ResponseEntity<JsonObject> logoutToken(@RequestHeader(value = "Refresh-Token", required = false) String refresh) {
         if(refresh != null && authService.deleteRefreshToken(refresh))

@@ -12,6 +12,7 @@ public class Default {
      * Default endpoint
      * @return API version
      */
+    @CrossOrigin(origins ="*", allowedHeaders="*")
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public ResponseEntity<String> index() {
         return new OkResponse<>("auth server v"+ IotBackofficeAuthApplication.API_VERSION).collect();
