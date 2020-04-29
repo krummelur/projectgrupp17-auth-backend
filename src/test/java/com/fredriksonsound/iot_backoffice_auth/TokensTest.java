@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class TokensTest {
     @Test
     public void encoded_token_should_be_decoded_correctly() throws ValidationError {
-        final long expiryFromNow = System.currentTimeMillis() + 1000*60*3;
+        final long expiryFromNow = System.currentTimeMillis() + Tokens.TOKEN_LIFETIME_MILLIS;
         String tokenString = Tokens.getAccessToken("SOMEID", "SOMEUSER");
         DefaultClaims c = (DefaultClaims) Tokens.decodeJwToken(tokenString).getBody();
         assertThat(c.getId()).isEqualTo("SOMEID");
@@ -26,7 +26,7 @@ public class TokensTest {
 
     @Test
     public void access_expiry_is_correctly() throws ValidationError {
-        final long expiryFromNow = System.currentTimeMillis() + 1000*60*3;
+        final long expiryFromNow = System.currentTimeMillis() + Tokens.TOKEN_LIFETIME_MILLIS;
         String tokenString = Tokens.getAccessToken("SOMEID", "SOMEUSER");
         DefaultClaims c = (DefaultClaims) Tokens.decodeJwToken(tokenString).getBody();
         assertThat(c.getExpiration()).isCloseTo(new Date(expiryFromNow), 10000);
