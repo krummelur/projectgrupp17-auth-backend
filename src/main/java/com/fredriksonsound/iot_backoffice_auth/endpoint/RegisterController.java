@@ -9,10 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class RegisterController {
@@ -24,6 +21,7 @@ public class RegisterController {
      * @param credentials the user to create
      * @return Created on success, error on invalid user
      */
+    @CrossOrigin(origins ="*", allowedHeaders="*")
     @RequestMapping(value = "/users", method = RequestMethod.POST)
     public ResponseEntity<JsonObject> registerUser(@RequestBody RegisterCredentials credentials) {
 
