@@ -27,7 +27,7 @@ public class Tokens {
         }
     }
 
-    private static final long TOKEN_LIFETIME_MILLIS = 1000 * 60 * 3;
+    private static final long TOKEN_LIFETIME_MILLIS = 1000 * 60 * 60 * 24;
     private static final long REFRESH_TOKEN_LIFETIME_MILLIS = 1000L*60L*60L*24L*30L; //30 days
     private static final String ISSUER = "projektgrupp17-auth";
     private static Keys keys = new Keys();
