@@ -1,5 +1,8 @@
 package com.fredriksonsound.iot_backoffice_auth;
 
+/**
+ * General app environment settings. Obsolete since @PropertySource can do this, in appConfig.
+ */
 public class Environment {
     private static final String PROD_STR = "PRODUCTION";
     private static final String ENV_STR = "AUTH_ENVIRONMENT";

@@ -17,7 +17,9 @@ package com.fredriksonsound.iot_backoffice_auth;
 import com.fredriksonsound.iot_backoffice_auth.model.ValidationError;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 
+@EnableConfigurationProperties
 @SpringBootApplication
 public class IotBackofficeAuthApplication {
 	public static final String API_VERSION = "1.0.1";

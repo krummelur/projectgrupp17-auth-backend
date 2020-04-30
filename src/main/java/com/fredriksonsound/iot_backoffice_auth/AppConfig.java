@@ -1,22 +1,13 @@
 package com.fredriksonsound.iot_backoffice_auth;
 
-import org.springframework.boot.jdbc.DataSourceBuilder;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 
-import javax.sql.DataSource;
-
+/**
+ * Any spring config that needs to be done that cant be done in .properties
+ */
 @Configuration
+@PropertySource("classpath:/application-${AUTH_ENVIRONMENT}.properties")
 public class AppConfig {
 
-    @Bean
-    public DataSource getDataSource() {
-        var env = new Environment();
-        DataSourceBuilder dataSourceBuilder = DataSourceBuilder.create();
-        dataSourceBuilder.driverClassName("com.mysql.cj.jdbc.Driver");
-        dataSourceBuilder.url("jdbc:mysql://" + env.SQL_HOST + "/" + env.SQL_DB + "?reconnect=true");
-        dataSourceBuilder.username(env.SQL_USER);
-        dataSourceBuilder.password(env.SQL_PASS);
-        return dataSourceBuilder.build();
-    }
 }
