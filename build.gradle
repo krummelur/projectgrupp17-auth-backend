@@ -43,6 +43,7 @@ dependencies {
 }
 
 test {
+	systemProperty "AUTH_ENVIRONMENT", "TEST"
 	jacoco {
 		destinationFile = file("$buildDir/jacoco/jacocoTest.exec")
 		classDumpDir = file("$buildDir/jacoco/classpathdumps")

@@ -10,6 +10,12 @@
  *
  * Author: Magnus Fredrikson
  * @version 1.0.1
+ *
+ * To run successfully you must set AUTH_ENVIRONMENT=TEST|LOCAL|STAGING|PRODUCTION
+ * in gradle.build, local machine, or using -D
+ * TEST is for testing, no database, only mock.
+ * LOCAL is for local db
+ * STAGING and PRODUCTION are for hosted db.
  */
 
 package com.fredriksonsound.iot_backoffice_auth;
