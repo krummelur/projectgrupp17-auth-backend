@@ -74,6 +74,28 @@ public class AuthService implements IAuthService {
     }
 
     /**
+     * Validates whether a tokens access-level (authToken.subject) is valid for accessing the resource (subject)
+     * @param accessToken
+     * @param subject
+     * @return
+     */
+    @Override
+    public boolean validateAccessFor(String accessToken, String subject) throws ValidationError {
+        DefaultClaims token = null;
+        try
+            { token = (DefaultClaims) (Tokens.decodeJwToken(accessToken).getBody()); }
+        catch (MalformedJwtException | SignatureException | IllegalArgumentException e)
+            { throw new ValidationError(ERROR_CODE.INVALID_JWT);}
+
+        if((Integer)token.get("exp") < System.currentTimeMillis()/1000)
+            throw new ValidationError(ERROR_CODE.EXPIRED_ACCESS_TOKEN);
+
+        if (token.getSubject().equals(subject) || token.getSubject().equals("admin"))
+            return true;
+        throw new ValidationError(ERROR_CODE.UNAUTHORIZED_RESOURCE_ACCESS);
+    }
+
+    /**
      * Generates a new access token given an expired accesstoken and a refresh token id
      * @param access
      * @param refreshId
@@ -106,4 +128,6 @@ public class AuthService implements IAuthService {
         String newAccessToken = Tokens.getAccessToken(UUID.randomUUID().toString(), (String)parsed.get("sub"));
         return newAccessToken;
     }
+
+
 }

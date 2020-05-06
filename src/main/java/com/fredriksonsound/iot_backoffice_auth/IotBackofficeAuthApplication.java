@@ -37,7 +37,6 @@ public class IotBackofficeAuthApplication {
 	 */
 	public static void main(String[] args) {
 		System.out.println("#############################\n!!!!  STARTING APP IN " + new Environment().ENVIRONMENT + "!!!\n#############################");
-
 		SpringApplication.run(IotBackofficeAuthApplication.class, args);
 	}
 }
