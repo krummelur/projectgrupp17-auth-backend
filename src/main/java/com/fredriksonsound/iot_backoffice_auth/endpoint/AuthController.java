@@ -82,6 +82,8 @@ public class AuthController {
     @CrossOrigin(origins ="*", allowedHeaders="*")
     @RequestMapping(value = "/auth/logout", method = RequestMethod.POST)
     public ResponseEntity<JsonObject> logoutToken(@RequestHeader(value = "Refresh-Token", required = false) String refresh) {
+        System.out.println("REFRESH-TOKEN ID:");
+        System.out.println(refresh);
         if(refresh != null && authService.deleteRefreshToken(refresh))
             return OkResponse.JsonFromMessage("deleted").collect();
         return ErrorResponse.JsonFromMessage("no such token").collect();
