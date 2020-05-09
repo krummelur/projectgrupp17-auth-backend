@@ -33,12 +33,12 @@ public class UserService implements IUserService {
                 || userRepository.existsByUsername(lcUsername))
             throw new ValidationError(ERROR_CODE.CONFLICTING_USER);
 
-        if(!UserUtils.validPassword(credentials.password()))
-            throw new ValidationError(ERROR_CODE.INVALID_PASSWORD);
         if(!UserUtils.validEmail(credentials.email()))
             throw new ValidationError(ERROR_CODE.INVALID_EMAIL);
         if(!UserUtils.validUsername(credentials.username()))
             throw new ValidationError(ERROR_CODE.INVALID_USERNAME);
+        if(!UserUtils.validPassword(credentials.password()))
+            throw new ValidationError(ERROR_CODE.INVALID_PASSWORD);
         if(!agencyRepository.existsById(credentials.agency())) {
             throw new ValidationError(ERROR_CODE.NONEXISTENT_AGENCY);
         }
