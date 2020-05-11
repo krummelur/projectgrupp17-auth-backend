@@ -4,6 +4,7 @@ import com.fredriksonsound.iot_backoffice_auth.data.AgencyRepository;
 import com.fredriksonsound.iot_backoffice_auth.data.UserRepository;
 import com.fredriksonsound.iot_backoffice_auth.model.User;
 import com.fredriksonsound.iot_backoffice_auth.model.util.PasswordUtils;
+import com.fredriksonsound.iot_backoffice_auth.model.util.UserUtils;
 import com.fredriksonsound.iot_backoffice_auth.service.AuthService;
 import com.fredriksonsound.iot_backoffice_auth.service.Tokens;
 import com.fredriksonsound.iot_backoffice_auth.service.UserService;
@@ -86,8 +87,14 @@ public class UsersController {
     @Transactional(isolation = Isolation.SERIALIZABLE)
     public ResponseEntity<JsonObject> updateUser(@RequestBody UpdateUser updateUser, @PathVariable("userEmail") String userEmail) {
 
-        if (authService.validateUserPassword(userEmail, updateUser.oldPassword))
+        if (!authService.validateUserPassword(userEmail, updateUser.oldPassword))
             return ErrorResponse.JsonFromMessage("Invalid login").collect();
+
+        if(!UserUtils.validPassword(updateUser.password))
+            return ErrorResponse.JsonFromMessage("The new password was not valid").collect();
+
+        if(!UserUtils.validUsername(updateUser.username))
+            return ErrorResponse.JsonFromMessage("The new username was not valid").collect();
 
         if (!userEmail.equals(updateUser.email()))
             if (userRepo.findById(updateUser.email()).isPresent())
