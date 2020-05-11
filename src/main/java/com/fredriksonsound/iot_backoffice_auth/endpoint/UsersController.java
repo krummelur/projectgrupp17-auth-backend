@@ -116,12 +116,9 @@ public class UsersController {
     public static class UpdateUser implements ValidationError.Validatable {
         private String username, password, email, agency, oldPassword;
 
-        public UpdateUser() {
-        }
+        public UpdateUser() { }
 
-        ;
-
-        public UpdateUser(String oldEmail, String oldPassword, String username, String password, String email, String agency) {
+        public UpdateUser(String oldPassword, String username, String password, String email, String agency) {
             this.oldPassword = oldPassword;
             this.username = username;
             this.password = password;
