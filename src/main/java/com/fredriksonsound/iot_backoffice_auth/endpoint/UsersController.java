@@ -84,9 +84,7 @@ public class UsersController {
     @CrossOrigin(origins = "*", allowedHeaders = "*")
     @RequestMapping(value = "/users/{userEmail}", method = RequestMethod.PUT)
     @Transactional(isolation = Isolation.SERIALIZABLE)
-    public ResponseEntity<JsonObject> updateUser(@RequestHeader(value = "Auth-Token", required = false) String authToken,
-                                                 @RequestBody UpdateUser updateUser,
-                                                 @PathVariable("userEmail") String userEmail) {
+    public ResponseEntity<JsonObject> updateUser(@RequestBody UpdateUser updateUser, @PathVariable("userEmail") String userEmail) {
 
         if (authService.validateUserPassword(userEmail, updateUser.oldPassword))
             return ErrorResponse.JsonFromMessage("Invalid login").collect();
@@ -104,11 +102,7 @@ public class UsersController {
             return ErrorResponse.JsonFromMessage("That agency does not exist").collect();
 
         var hashedPass = PasswordUtils.Hash(updateUser.password);
-        var newUser = new User(updateUser.username,updateUser.email,hashedPass,updateUser.agency);
-
-        //Transactional property should rollback automatically if one fails
-        //And I assume throw a 500.
-        userRepo.deleteById(userEmail);
+        var newUser = new User(updateUser.username,userEmail,hashedPass,updateUser.agency);
         userRepo.save(newUser);
         return OkResponse.JsonFromMessage("user updated").collect();
     }
