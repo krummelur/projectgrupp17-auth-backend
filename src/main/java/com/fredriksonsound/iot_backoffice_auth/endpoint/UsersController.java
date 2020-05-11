@@ -88,7 +88,7 @@ public class UsersController {
     public ResponseEntity<JsonObject> updateUser(@RequestBody UpdateUser updateUser, @PathVariable("userEmail") String userEmail) {
 
         if (!authService.validateUserPassword(userEmail, updateUser.oldPassword))
-            return ErrorResponse.JsonFromMessage("Invalid login").collect();
+            return ErrorResponse.JsonFromMessage("Incorrect password").collect();
 
         if(!UserUtils.validPassword(updateUser.password))
             return ErrorResponse.JsonFromMessage("The new password was not valid").collect();
