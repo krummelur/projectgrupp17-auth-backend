@@ -91,7 +91,7 @@ public class UsersController {
         if (authService.validateUserPassword(userEmail, updateUser.oldPassword))
             return ErrorResponse.JsonFromMessage("Invalid login").collect();
 
-        if (!updateUser.oldEmail().equals(updateUser.email()))
+        if (!userEmail.equals(updateUser.email()))
             if (userRepo.findById(updateUser.email()).isPresent())
                 return ErrorResponse.JsonFromMessage("That email is already taken by another user").collect();
 
@@ -147,10 +147,6 @@ public class UsersController {
 
         public String oldPassword() {
             return oldPassword;
-        }
-
-        public String oldEmail() {
-            return oldEmail;
         }
 
         @Override
