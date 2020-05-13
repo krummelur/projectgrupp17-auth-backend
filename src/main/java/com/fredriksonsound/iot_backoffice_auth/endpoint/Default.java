@@ -10,8 +10,6 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class Default {
-    @Autowired
-    private UserRepository userRepo;
     /**
      * Default endpoint
      * @return API version
@@ -21,12 +19,4 @@ public class Default {
     public ResponseEntity<String> index() {
         return new OkResponse<>("auth server v"+ IotBackofficeAuthApplication.API_VERSION).collect();
     }
-
-    @CrossOrigin(origins ="*", allowedHeaders="*")
-    @RequestMapping(value = "/crash", method = RequestMethod.GET)
-    public ResponseEntity<String> crash() {
-        userRepo.deleteById("aaaaaaaaaaaa");
-        throw new RuntimeException("Ouch!");
-    }
-
 }

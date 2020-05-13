@@ -40,7 +40,7 @@ public class TokensTest {
         cal.setTime(new Date());
         cal.add(Calendar.DATE, 30);
         var endDate = cal.toInstant().toEpochMilli();
-        assertThat(c.getExpiration()).isCloseTo(new Date(endDate), 1000L);
+        assertThat(c.getExpiration()).isCloseTo(new Date(endDate), 2000L);
     }
 
     @Test
