@@ -1,9 +1,9 @@
 package com.fredriksonsound.iot_backoffice_auth.util;
 
 /**
- * Pair....
- * @param <K>
- * @param <V>
+ * Simple Pair implementation
+ * @param <K> the Key type
+ * @param <V> the value type
  */
 public class Pair<K, V> {
     public final K first;

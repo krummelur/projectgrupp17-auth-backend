@@ -1,3 +1,8 @@
+/**
+ * @author Magnus Fredriksson
+ * This class handles the bindings for the public /users interface
+ */
+
 package com.fredriksonsound.iot_backoffice_auth.endpoint;
 
 import com.fredriksonsound.iot_backoffice_auth.service.UserService;
@@ -11,15 +16,36 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * Register endpoint
+ */
 @RestController
 public class RegisterController {
     @Autowired
     private UserService userService;
 
     /**
-     * Creates a new user given user details
+     * <br><br>
+     * <b>  API doc:</b><br>
+     * <b>  Description</b>: Creates a new user given user details<br>
+     * <b>  Method</b>: POST <br>
+     * <b>  Location</b>: /users <br>
+     * <b>  Body</b>: <br>
+     *     { <br>
+     *     <i>
+     *          username: [username], <br>
+     *          email: [email],<br>
+     *          password: [password],<br>
+     *          agency: [an_existing_agency]<br>
+     *      </i>
+     *      } <br>
+     *
+     * <b>  Success response</b>: {status: "ok"}, CODE: 201 <br>
+     * <b>  Error response</b>: {status: "error", message: [error_message]}
+     *
      * @param credentials the user to create
-     * @return Created on success, error on invalid user
+     * @return the location of the created user or error, error on invalid user
+     *
      */
     @CrossOrigin(origins ="*", allowedHeaders="*")
     @RequestMapping(value = "/users", method = RequestMethod.POST)
@@ -51,7 +77,7 @@ public class RegisterController {
         return new ResponseEntity<>(json, new HttpHeaders(), HttpStatus.CREATED);
     }
 
-    public static class RegisterCredentials implements ValidationError.Validatable {
+        public static class RegisterCredentials implements ValidationError.Validatable {
         private String username, password, email, agency;
 
         public RegisterCredentials(){};

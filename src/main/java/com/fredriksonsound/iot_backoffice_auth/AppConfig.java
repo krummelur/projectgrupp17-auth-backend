@@ -4,7 +4,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 
 /**
- * Any spring config that needs to be done that cant be done in .properties
+ * Any spring config that needs to be done that cant be done in application.[ENVIRONMENT].properties
  */
 @Configuration
 @PropertySource("classpath:/application-${AUTH_ENVIRONMENT}.properties")

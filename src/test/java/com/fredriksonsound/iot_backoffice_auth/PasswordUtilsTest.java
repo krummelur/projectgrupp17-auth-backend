@@ -1,6 +1,6 @@
 package com.fredriksonsound.iot_backoffice_auth;
 
-import com.fredriksonsound.iot_backoffice_auth.model.util.PasswordUtils;
+import com.fredriksonsound.iot_backoffice_auth.util.PasswordUtils;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;

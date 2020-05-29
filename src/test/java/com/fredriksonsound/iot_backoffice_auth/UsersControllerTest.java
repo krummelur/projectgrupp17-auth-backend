@@ -2,7 +2,7 @@ package com.fredriksonsound.iot_backoffice_auth;
 
 import com.fredriksonsound.iot_backoffice_auth.data.UserRepository;
 import com.fredriksonsound.iot_backoffice_auth.model.User;
-import com.fredriksonsound.iot_backoffice_auth.service.Tokens;
+import com.fredriksonsound.iot_backoffice_auth.util.TokensUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -53,7 +53,7 @@ public class UsersControllerTest {
 
     @Test
     public void get_valid_user_test() throws Exception {
-        String tknStr = Tokens.getCustomToken("TKNID", existentUserEmail, 999999);
+        String tknStr = TokensUtils.getCustomToken("TKNID", existentUserEmail, 999999);
         HashMap<String, String> headers = new HashMap<>();
         headers.put("Auth-Token", tknStr);
         this.mockMvc.perform(get("/users/" + existentUserEmail).header("Auth-Token", tknStr))
@@ -66,7 +66,7 @@ public class UsersControllerTest {
 
     @Test
     public void get_user_without_accessToken() throws Exception {
-        String tknStr = Tokens.getCustomToken("TKNID", nonExistentUserEmail, 999999);
+        String tknStr = TokensUtils.getCustomToken("TKNID", nonExistentUserEmail, 999999);
         HashMap<String, String> headers = new HashMap<>();
         headers.put("Auth-Token", tknStr);
         this.mockMvc.perform(get("/users/" + nonExistentUserEmail))
@@ -77,7 +77,7 @@ public class UsersControllerTest {
 
     @Test
     public void get_nonexistant_user_test() throws Exception {
-        String tknStr = Tokens.getCustomToken("TKNID", nonExistentUserEmail, 999999);
+        String tknStr = TokensUtils.getCustomToken("TKNID", nonExistentUserEmail, 999999);
         HashMap<String, String> headers = new HashMap<>();
         headers.put("Auth-Token", tknStr);
         this.mockMvc.perform(get("/users/" + nonExistentUserEmail).header("Auth-Token", tknStr))
@@ -87,7 +87,7 @@ public class UsersControllerTest {
     }
     @Test
     public void get_for_user_that_is_not_me() throws Exception {
-        String tknStr = Tokens.getCustomToken("TKNID", anotherExistantUserEMAIL, 999999);
+        String tknStr = TokensUtils.getCustomToken("TKNID", anotherExistantUserEMAIL, 999999);
         HashMap<String, String> headers = new HashMap<>();
         headers.put("Auth-Token", tknStr);
         this.mockMvc.perform(get("/users/" + existentUserEmail).header("Auth-Token", tknStr))
@@ -98,7 +98,7 @@ public class UsersControllerTest {
 
     @Test
     public void get_user_with_expired_token() throws Exception {
-        String tknStr = Tokens.getCustomToken("TKNID", existentUserEmail, -10000);
+        String tknStr = TokensUtils.getCustomToken("TKNID", existentUserEmail, -10000);
         HashMap<String, String> headers = new HashMap<>();
         headers.put("Auth-Token", tknStr);
         this.mockMvc.perform(get("/users/" + existentUserEmail).header("Auth-Token", tknStr))
@@ -109,7 +109,7 @@ public class UsersControllerTest {
 
     @Test
     public void get_user_with_bad_token() throws Exception {
-        String tknStr = Tokens.getCustomToken("TKNID", existentUserEmail, -10000);
+        String tknStr = TokensUtils.getCustomToken("TKNID", existentUserEmail, -10000);
         tknStr = tknStr.substring(1);
         HashMap<String, String> headers = new HashMap<>();
         headers.put("Auth-Token", tknStr);

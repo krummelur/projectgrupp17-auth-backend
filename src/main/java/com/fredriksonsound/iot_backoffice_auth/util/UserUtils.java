@@ -1,9 +1,13 @@
-package com.fredriksonsound.iot_backoffice_auth.model.util;
+package com.fredriksonsound.iot_backoffice_auth.util;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Utility class for users
+ */
 public class UserUtils {
+    private UserUtils() {}
     public static final Pattern VALID_EMAIL_ADDRESS_REGEX =
             Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE),
             VALID_PASSWORD_REGEX = Pattern.compile("(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(^.{6,32}$)"),

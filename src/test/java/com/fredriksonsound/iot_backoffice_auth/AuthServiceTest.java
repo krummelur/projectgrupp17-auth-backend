@@ -6,9 +6,9 @@ import com.fredriksonsound.iot_backoffice_auth.service.*;
 import com.fredriksonsound.iot_backoffice_auth.data.TokenRepository;
 import com.fredriksonsound.iot_backoffice_auth.data.UserRepository;
 import com.fredriksonsound.iot_backoffice_auth.model.User;
-import com.fredriksonsound.iot_backoffice_auth.model.util.PasswordUtils;
+import com.fredriksonsound.iot_backoffice_auth.util.PasswordUtils;
 import com.fredriksonsound.iot_backoffice_auth.util.Pair;
-import io.jsonwebtoken.SignatureException;
+import com.fredriksonsound.iot_backoffice_auth.util.TokensUtils;
 import io.jsonwebtoken.impl.DefaultClaims;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,7 +20,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 import java.util.Optional;
-import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -59,8 +58,8 @@ public class AuthServiceTest {
                 ,"")));
         when(tknRepository.existsById(existentRefreshTkn)).thenReturn(true);
         when(tknRepository.existsById(expiredRefreshTkn)).thenReturn(true);
-        String validRfTknData = Tokens.getRefreshToken(existentRefreshTkn, existentUser);
-        String expiredRfTknData = Tokens.getCustomToken(expiredRefreshTkn, existentUser, -10000);
+        String validRfTknData = TokensUtils.getRefreshToken(existentRefreshTkn, existentUser);
+        String expiredRfTknData = TokensUtils.getCustomToken(expiredRefreshTkn, existentUser, -10000);
         when(tknRepository.findById(existentRefreshTkn)).thenReturn(Optional.of(new RefreshToken(existentRefreshTkn, validRfTknData)));
         when(tknRepository.findById(expiredRefreshTkn)).thenReturn(Optional.of(new RefreshToken(expiredRefreshTkn, expiredRfTknData)));
     }
@@ -85,7 +84,7 @@ public class AuthServiceTest {
         //String uuid = UUID.randomUUID().toString();
         //String tkn = Tokens.getAccessToken(uuid, existentUser);
         Pair<String, String> tkns = authService.generateAndSaveTokens(existentUser);
-        assertThat(((DefaultClaims)Tokens.decodeJwToken(tkns.first).getBody()).getSubject()).isEqualTo(existentUser);
+        assertThat(((DefaultClaims) TokensUtils.decodeJwToken(tkns.first).getBody()).getSubject()).isEqualTo(existentUser);
     }
 
     @Test
@@ -102,7 +101,7 @@ public class AuthServiceTest {
 
     @Test
     public void invalid_access_token_refresh() {
-        String tokenString = Tokens.getAccessToken("SOMEID", "SOMEUSER");
+        String tokenString = TokensUtils.getAccessToken("SOMEID", "SOMEUSER");
         var b64Strings = tokenString.split("\\.");
         b64Strings[1] = new String(Base64.encodeBase64(new String(new Base64().decode(b64Strings[1]))
                 .replace("SOMEUSER", "SOMEOTHERUSER").getBytes()));
@@ -122,7 +121,7 @@ public class AuthServiceTest {
 
     @Test
     public void expired_refresh_token() throws InterruptedException {
-        String tkn = Tokens.getCustomToken("UUID", existentUser, -10000);
+        String tkn = TokensUtils.getCustomToken("UUID", existentUser, -10000);
         Thread.sleep(10);
 
         var e = assertThrows(ValidationError.class, () -> authService.refresh(tkn,expiredRefreshTkn));
@@ -131,7 +130,7 @@ public class AuthServiceTest {
 
     @Test
     public void refresh_token_success() throws InterruptedException, ValidationError {
-        String tkn = Tokens.getCustomToken("UUID", existentUser, -10000);
+        String tkn = TokensUtils.getCustomToken("UUID", existentUser, -10000);
         Thread.sleep(10);
 
         assertThat(authService.refresh(tkn,existentRefreshTkn)).isNotEqualTo(null);

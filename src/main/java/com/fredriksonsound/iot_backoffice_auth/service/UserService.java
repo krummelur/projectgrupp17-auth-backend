@@ -5,13 +5,14 @@ import com.fredriksonsound.iot_backoffice_auth.data.UserRepository;
 import com.fredriksonsound.iot_backoffice_auth.endpoint.RegisterController;
 import com.fredriksonsound.iot_backoffice_auth.model.User;
 import com.fredriksonsound.iot_backoffice_auth.model.ValidationError;
-import com.fredriksonsound.iot_backoffice_auth.model.util.PasswordUtils;
-import com.fredriksonsound.iot_backoffice_auth.model.util.UserUtils;
+import com.fredriksonsound.iot_backoffice_auth.util.PasswordUtils;
+import com.fredriksonsound.iot_backoffice_auth.util.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.el.ELContextEvent;
-
+/**
+ * UserService implementation
+ */
 @Service
 public class UserService implements IUserService {
     @Autowired
@@ -23,7 +24,7 @@ public class UserService implements IUserService {
      * Saves a new user to the database
      * @param credentials the user
      * @return true if success
-     * @throws ValidationError
+     * @throws ValidationError if the action is not valid given input
      */
     public boolean saveNewUser(RegisterController.RegisterCredentials credentials) throws ValidationError {
         ///TODO what about agency case sensitivity?

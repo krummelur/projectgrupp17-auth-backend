@@ -5,13 +5,15 @@ import com.fredriksonsound.iot_backoffice_auth.service.AuthService;
 import com.fredriksonsound.iot_backoffice_auth.endpoint.AuthController;
 import com.fredriksonsound.iot_backoffice_auth.model.ValidationError;
 import com.fredriksonsound.iot_backoffice_auth.service.ERROR_CODE;
-import com.fredriksonsound.iot_backoffice_auth.service.Tokens;
+import com.fredriksonsound.iot_backoffice_auth.util.TokensUtils;
 import com.fredriksonsound.iot_backoffice_auth.util.Pair;
 import com.google.gson.JsonObject;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -26,6 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
 
+
 /**
  * Tests the Auth endpoint
  */
@@ -33,6 +36,7 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standal
 @AutoConfigureMockMvc
 @AutoConfigureTestDatabase(replace= AutoConfigureTestDatabase.Replace.ANY)
 public class AuthControllerTest {
+
     @Autowired
     private MockMvc mockMvc;
 
@@ -151,7 +155,7 @@ public class AuthControllerTest {
 
     @Test
     public void refresh_success() throws Exception {
-        String tkn = Tokens.getAccessToken("UUID", "SOMEUSER");
+        String tkn = TokensUtils.getAccessToken("UUID", "SOMEUSER");
         when(authService.refresh(expiredAuthToken, nonExpiredRefreshToken)).thenReturn(tkn);
         this.mockMvc.perform(post("/auth/refresh").contentType(MediaType.APPLICATION_JSON)
                 .header("Auth-Token", expiredAuthToken)

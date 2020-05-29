@@ -3,20 +3,16 @@ package com.fredriksonsound.iot_backoffice_auth.endpoint;
 import com.fredriksonsound.iot_backoffice_auth.data.AgencyRepository;
 import com.fredriksonsound.iot_backoffice_auth.data.UserRepository;
 import com.fredriksonsound.iot_backoffice_auth.model.User;
-import com.fredriksonsound.iot_backoffice_auth.model.util.PasswordUtils;
-import com.fredriksonsound.iot_backoffice_auth.model.util.UserUtils;
+import com.fredriksonsound.iot_backoffice_auth.util.PasswordUtils;
+import com.fredriksonsound.iot_backoffice_auth.util.UserUtils;
 import com.fredriksonsound.iot_backoffice_auth.service.AuthService;
-import com.fredriksonsound.iot_backoffice_auth.service.Tokens;
-import com.fredriksonsound.iot_backoffice_auth.service.UserService;
 import com.fredriksonsound.iot_backoffice_auth.service.ERROR_CODE;
 import com.fredriksonsound.iot_backoffice_auth.model.ValidationError;
-import com.fredriksonsound.iot_backoffice_auth.web.CreatedResponse;
 import com.fredriksonsound.iot_backoffice_auth.web.ErrorResponse;
 import com.fredriksonsound.iot_backoffice_auth.web.OkResponse;
 import com.fredriksonsound.iot_backoffice_auth.web.UnauthorizedResponse;
 import com.google.gson.JsonObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Isolation;
@@ -25,6 +21,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.NoSuchElementException;
 
+/**
+ * Users API
+ */
 @RestController
 public class UsersController {
     @Autowired
@@ -36,11 +35,20 @@ public class UsersController {
 
 
     /**
-     * Creates a new user given user details
+     * Gets user info of a user by email, if the user is allowed
+     * <br><br>
+     * <b>  API doc:</b><br>
+     * <b>  Description</b>: Gets user info of a user by email, if the user is allowed <br>
+     * <b>  Method</b>: GET <br>
+     * <b>  Location</b>: /users/[USER_EMAIL] <br>
+     * <b>  Headers</b>:<br>
+     * <b>  Auth-Token</b>: [token]<br><br>
+     * <b>  Success response</b>: {status: "success", user: {..USER_DATA}}, CODE: 200 <br>
+     * <b>  Error response</b>: {status: "error", message: [error_message]}, 400 or 401
      *
-     * @param authToken valid auth-token for user
-     * @param userEmail the email to look up user details on
-     * @return Created on success, error on invalid user
+     * @param authToken the auth-token to authenticate the request
+     * @param userEmail the email of the user to get
+     * @return a json representing the user
      */
     @CrossOrigin(origins = "*", allowedHeaders = "*")
     @RequestMapping(value = "/users/{userEmail}", method = RequestMethod.GET)
@@ -82,6 +90,30 @@ public class UsersController {
         }
     }
 
+    /**
+     * Updates a user, if the username and email is avaliable, and oldPassword matches the users old password
+     * <br><br>
+     * <b>  API doc:</b><br>
+     * <b>  Description</b>: Updates a user, if the username and email is avaliable, and oldPassword matches the users old password<br>
+     * <b>  Method</b>: PUT <br>
+     * <b>  Location</b>: /users/[USER_EMAIL] <br>
+     * <b>  Body</b>: <br>
+     *     { <br>
+     *     <i>
+     *          username: [new_username], <br>
+     *          email: [new_email],<br>
+     *          password: [new_password],<br>
+     *          oldPassword: [old_password],<br>
+     *          agency: [new__agency]<br>
+     *      </i>
+     *      } <br>
+     * <b>  Success response</b>: {status: "success", message: "user_updated"}, CODE: 200 <br>
+     * <b>  Error response</b>: {status: "error", message: [error_message]}, 400 or 401
+     *
+     * @param userEmail the user email address
+     * @param updateUser Json body of the new user, including the old password
+     * @return a json representing the user
+     */
     @CrossOrigin(origins = "*", allowedHeaders = "*")
     @RequestMapping(value = "/users/{userEmail}", method = RequestMethod.PUT)
     @Transactional(isolation = Isolation.SERIALIZABLE)

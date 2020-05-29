@@ -12,6 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * Authentication api
+ */
 @RestController
 public class AuthController {
     @Autowired
@@ -19,9 +22,21 @@ public class AuthController {
 
     /**
      * Refreshes an access token using specified refresh token
+     * <br><br>
+     * <b>  API doc:</b><br>
+     * <b>  Description</b>: Refreshes an access token using specified refresh token <br>
+     * <b>  Method</b>: POST <br>
+     * <b>  Location</b>: /users <br>
+     * <b>  Headers</b>:<br>
+     * <b>  Refresh-Token</b>: the refresh token to use <br>
+     * <b>  Auth-Token</b>: the expired auth token <br><br>
+     * <b>  Success response</b>: {status: "success", token: [token]}, CODE: 200 <br>
+     * <b>  Error response</b>: {status: "error", message: [error_message]}, 400 or 401
+     *
      * @param refresh the refresh token id
      * @param access the JWT access token
-     * @return httpResponse
+     * @return Json with token
+     *
      */
     @CrossOrigin(origins ="*", allowedHeaders="*")
     @RequestMapping(value = "/auth/refresh", method = RequestMethod.POST)
@@ -52,8 +67,24 @@ public class AuthController {
     }
 
     /**
-     * Logs a user using email and password
-     * @param credentials
+     * Logs a user using email and password combination. Responds with a short lived access-token and id of long lived refresh-token
+     * <br><br>
+     * <b>  API doc:</b><br>
+     * <b>  Description</b>: Logs a user using email and password combination <br>
+     * <b>  Method</b>: POST <br>
+     * <b>  Location</b>: /auth/login <br>
+     * <b>  Body</b>: <br>
+     *     { <br>
+     *     <i>
+     *          email: [email],<br>
+     *          password: [password],<br>
+     *      </i>
+     *      } <br>
+     *
+     * <b>  Success response</b>: {status: "success", data: {token, [token], refreshtoken: [refresh_token_id]}}, CODE: 201 <br>
+     * <b>  Error response</b>: {status: "error", message: [error_message]}, 400 or 401
+     *
+     * @param credentials the credentials to log in with
      * @return an access token and refresh token id on success, error on fail.
      */
     @CrossOrigin(origins ="*", allowedHeaders="*")
@@ -75,8 +106,18 @@ public class AuthController {
     }
 
     /**
-     * logs a specified user out, deletes the corresponding refresh token
-     * @param refresh
+     * logs a specified user out, deletes the corresponding refresh token responds 200 whether the token exists or not
+     * <br><br>
+     * <b>  API doc:</b><br>
+     * <b>  Description</b>: logs a specified user out, deletes the corresponding refresh token responds 200 whether the token exists or not<br>
+     * <b>  Method</b>: POST <br>
+     * <b>  Location</b>: /auth/logout <br>
+     * <b>  Headers</b>:<br>
+     * <b>  Refresh-Token</b>: the refresh token to use <br><br>
+     * <b>  Success response</b>: {status: "ok", message: "no such token"|"token deleted"}, CODE: 200 <br>
+     * <b>  Error response</b>: {status: "error", message: [error_message]}, 400 or 401
+     *
+     * @param refresh the refresh token id associated with the session
      * @return OK or Bad request
      */
     @CrossOrigin(origins ="*", allowedHeaders="*")

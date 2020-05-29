@@ -1,4 +1,4 @@
-package com.fredriksonsound.iot_backoffice_auth.service;
+package com.fredriksonsound.iot_backoffice_auth.util;
 
 import com.fredriksonsound.iot_backoffice_auth.Environment;
 import io.jsonwebtoken.*;
@@ -10,7 +10,11 @@ import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Date;
 
-public class Tokens {
+/**
+ * Utility class for tokens
+ */
+public class TokensUtils {
+    private TokensUtils() {}
     private static class Keys {
         PublicKey pub = null;
         PrivateKey priv = null;
@@ -32,6 +36,13 @@ public class Tokens {
     private static final String ISSUER = "projektgrupp17-auth";
     private static Keys keys = new Keys();
 
+    /**
+     * Generates a custom token
+     * @param id the token id
+     * @param user the token subject
+     * @param lifetime the token lifetime
+     * @return a new custom token
+     */
     public static String getCustomToken(String id, String user, long lifetime) {
         return createJWT(id, user, lifetime);
     }
@@ -62,8 +73,8 @@ public class Tokens {
      * @param jwToken the encoded token to decode
      * @return a decoded token body
      * @throws MalformedJwtException    if error occurs in parser
-     * @throws SignatureException
-     * @throws IllegalArgumentException
+     * @throws SignatureException       if error with signature
+     * @throws IllegalArgumentException if error parsing
      */
     public static Jwt decodeJwToken(String jwToken) {
         JwtParser parser = Jwts.parser().setSigningKey(keys.getPublic());
