@@ -4,6 +4,7 @@ implemented with spring testing with mockito
 
 ![Java CI with Gradle](https://github.com/krummelur/projectgrupp17-auth-backend/workflows/Java%20CI%20with%20Gradle/badge.svg?branch=master)
 
+### [Full documentation](https://krummelur.github.io/projectgrupp17-auth-backend/index.html)
 
 ## Endpoints
 
