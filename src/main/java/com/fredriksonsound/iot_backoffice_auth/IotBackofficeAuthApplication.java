@@ -28,6 +28,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+/**
+ * Contains main, initializes Spring
+ */
 @EnableConfigurationProperties
 @SpringBootApplication
 public class IotBackofficeAuthApplication {

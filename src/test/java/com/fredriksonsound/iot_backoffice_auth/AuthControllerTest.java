@@ -1,6 +1,5 @@
 package com.fredriksonsound.iot_backoffice_auth;
 
-
 import com.fredriksonsound.iot_backoffice_auth.service.AuthService;
 import com.fredriksonsound.iot_backoffice_auth.endpoint.AuthController;
 import com.fredriksonsound.iot_backoffice_auth.model.ValidationError;
@@ -9,17 +8,14 @@ import com.fredriksonsound.iot_backoffice_auth.util.TokensUtils;
 import com.fredriksonsound.iot_backoffice_auth.util.Pair;
 import com.google.gson.JsonObject;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-
 
 import static org.hamcrest.core.StringContains.containsString;
 import static org.mockito.Mockito.when;
@@ -27,7 +23,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
-
 
 /**
  * Tests the Auth endpoint
