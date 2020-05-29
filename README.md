@@ -1,4 +1,4 @@
-# projectgrupp17-auth-backend
+# projektgrupp17-auth-backend
 auth service for iot project using JWT
 implemented with spring testing with mockito
 
